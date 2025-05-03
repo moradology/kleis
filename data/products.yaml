@@ -1,0 +1,303 @@
+# Product Catalog for Research Purposes
+# Structure matches schema.sql requirements
+
+# Categories for organizing substances
+categories:
+  - slug: peptides
+    name: Peptides
+  - slug: metabolic
+    name: Metabolic Research
+  - slug: tissue-repair
+    name: Tissue Repair Research
+  - slug: cognitive
+    name: Cognitive Research
+  - slug: aging
+    name: Aging and Longevity Research
+
+# Substance data with variants
+substances:
+  - slug: semaglutide
+    name: Semaglutide
+    description: "Semaglutide is a GLP-1 receptor agonist used in metabolic research. Laboratory studies focus on insulin secretion mechanisms, glucose homeostasis, and hepatic glucose production pathways. Research applications include metabolic signaling pathways and receptor-mediated cellular responses."
+    sequence: HGEGTFTSDVSSYLEGQAAK(gamma-Glu-palmitoyl)EFIAWLVRGRG
+    sequence_length: 31
+    molecular_weight: 4113.58
+    formula: C187H291N45O59
+    cas_number: "910463-68-2"
+    salt_form: acetate
+    physical_form: "lyophilized powder"
+    storage_temp_c: -20
+    recommended_solvent: "Bacteriostatic Water"
+    categories: [peptides, metabolic]
+    variants:
+      - sku: SEMAGLUTIDE-2MG
+        mg: 2.0
+        price_cents: 7999
+        batch_id: "LOT2023-SEM-001"
+        coa_path: /images/products/semaglutide-2mg.jpg
+        quantity: 0
+      - sku: SEMAGLUTIDE-5MG
+        mg: 5.0
+        price_cents: 14999
+        batch_id: "LOT2023-SEM-002"
+        coa_path: /images/products/semaglutide-5mg.jpg
+        quantity: 0
+      - sku: SEMAGLUTIDE-10MG
+        mg: 10.0
+        price_cents: 24999
+        batch_id: "LOT2023-SEM-003"
+        coa_path: /images/products/semaglutide-10mg.jpg
+        quantity: 0
+
+  - slug: retatrutide
+    name: Retatrutide
+    description: "Retatrutide is a novel triple agonist that targets GIP, GLP-1, and glucagon receptors. Research applications focus on metabolic signaling pathways and energy homeostasis mechanisms. Laboratory studies examine receptor-mediated cellular responses in various experimental models."
+    sequence: YXEGTFTSDYSIYLDK(gamma-Glu-C16)QAAREFVAWLVKGR-NH2
+    sequence_length: 39
+    molecular_weight: 4802.41
+    formula: C215H334N56O68
+    cas_number: "2381089-83-2"
+    salt_form: acetate
+    physical_form: "lyophilized powder"
+    storage_temp_c: -20
+    recommended_solvent: "Bacteriostatic Water"
+    categories: [peptides, metabolic]
+    variants:
+      - sku: RETATRUTIDE-2MG
+        mg: 2.0
+        price_cents: 9999
+        batch_id: "LOT2023-RET-001"
+        coa_path: /images/products/retatrutide-2mg.jpg
+        quantity: 0
+      - sku: RETATRUTIDE-5MG
+        mg: 5.0
+        price_cents: 19999
+        batch_id: "LOT2023-RET-002"
+        coa_path: /images/products/retatrutide-5mg.jpg
+        quantity: 0
+
+  - slug: tirzepatide
+    name: Tirzepatide
+    description: "Tirzepatide is a dual GIP and GLP-1 receptor agonist used in metabolic research. Laboratory studies focus on incretin receptor pathways and glucose regulation mechanisms. Research applications include pancreatic beta-cell function and insulin sensitivity in experimental models."
+    sequence: YXEGTFTSDYSIYLDKQAAXEFVNWLLAGGPSSGAPPPSK-NH2
+    sequence_length: 39
+    molecular_weight: 4813.55
+    formula: C225H348N48O68
+    cas_number: "2023788-19-2"
+    salt_form: acetate
+    physical_form: "lyophilized powder"
+    storage_temp_c: -20
+    recommended_solvent: "Bacteriostatic Water"
+    categories: [peptides, metabolic]
+    variants:
+      - sku: TIRZEPATIDE-2MG
+        mg: 2.0
+        price_cents: 8999
+        batch_id: "LOT2023-TIR-001"
+        coa_path: /images/products/tirzepatide-2mg.jpg
+        quantity: 0
+      - sku: TIRZEPATIDE-5MG
+        mg: 5.0
+        price_cents: 16999
+        batch_id: "LOT2023-TIR-002"
+        coa_path: /images/products/tirzepatide-5mg.jpg
+        quantity: 0
+      - sku: TIRZEPATIDE-10MG
+        mg: 10.0
+        price_cents: 27999
+        batch_id: "LOT2023-TIR-003"
+        coa_path: /images/products/tirzepatide-10mg.jpg
+        quantity: 0
+
+  - slug: cagrilintide
+    name: Cagrilintide
+    description: "Cagrilintide is an amylin analog used in metabolic research. Laboratory studies focus on appetite regulation mechanisms and energy homeostasis pathways. Research applications include hypothalamic signaling and receptor-mediated cellular responses in various experimental models."
+    molecular_weight: 5400.0
+    formula: C244H374N64O72S2
+    cas_number: "1415456-99-3"
+    salt_form: acetate
+    physical_form: "lyophilized powder"
+    storage_temp_c: -20
+    recommended_solvent: "Bacteriostatic Water"
+    categories: [peptides, metabolic]
+    variants:
+      - sku: CAGRILINTIDE-3MG
+        mg: 3.0
+        price_cents: 10999
+        batch_id: "LOT2023-CAG-001"
+        coa_path: /images/products/cagrilintide-3mg.jpg
+        quantity: 0
+      - sku: CAGRILINTIDE-6MG
+        mg: 6.0
+        price_cents: 18999
+        batch_id: "LOT2023-CAG-002"
+        coa_path: /images/products/cagrilintide-6mg.jpg
+        quantity: 0
+
+  - slug: bpc157
+    name: BPC-157
+    description: "Body Protection Compound-157 (BPC-157) is a pentadecapeptide derived from a protective protein found in gastric juice. Research indicates potential tissue repair properties, with studies focusing on tendon, muscle, and nerve recovery mechanisms."
+    sequence: GEPPPGKPADDAGLV
+    sequence_length: 15
+    molecular_weight: 1419.53
+    formula: C62H98N16O22
+    cas_number: "137525-51-0"
+    salt_form: acetate
+    physical_form: "lyophilized powder"
+    storage_temp_c: -20
+    recommended_solvent: "0.9% Sodium Chloride (NaCl) or Bacteriostatic Water"
+    categories: [peptides, tissue-repair]
+    variants:
+      - sku: BPC157-5MG
+        mg: 5.0
+        price_cents: 4999
+        batch_id: "LOT2023-BPC-001"
+        coa_path: /images/products/bpc157-5mg.jpg
+        quantity: 0
+      - sku: BPC157-10MG
+        mg: 10.0
+        price_cents: 8999
+        batch_id: "LOT2023-BPC-002"
+        coa_path: /images/products/bpc157-10mg.jpg
+        quantity: 0
+
+  - slug: tb500
+    name: TB-500
+    description: "TB-500 is a synthetic fraction of the protein thymosin beta-4, which plays a role in cellular migration and various cellular processes. Research applications focus on its effects on actin, a cell-building protein essential for cell structure and movement, and potential regenerative properties in various tissue models."
+    sequence: LKKTETQ
+    sequence_length: 7
+    molecular_weight: 4963.0
+    formula: C212H350N56O78S1
+    cas_number: "885340-08-9"
+    salt_form: acetate
+    physical_form: "lyophilized powder"
+    storage_temp_c: -20
+    recommended_solvent: "Bacteriostatic Water"
+    categories: [peptides, tissue-repair]
+    variants:
+      - sku: TB500-5MG
+        mg: 5.0
+        price_cents: 5499
+        batch_id: "LOT2023-TB5-001"
+        coa_path: /images/products/tb500-5mg.jpg
+        quantity: 0
+      - sku: TB500-10MG
+        mg: 10.0
+        price_cents: 9999
+        batch_id: "LOT2023-TB5-002"
+        coa_path: /images/products/tb500-10mg.jpg
+        quantity: 0
+
+  - slug: cjc1295
+    name: CJC-1295
+    description: "CJC-1295 is a synthetic growth hormone releasing hormone (GHRH) analog. Research applications focus on growth hormone signaling pathways and receptor-mediated cellular responses. Laboratory studies examine GHRH receptor activation mechanisms in various experimental models."
+    sequence: YADAIFTNSYRKVLGQLSARKLLQDILSRQQGESNQERGARARL
+    sequence_length: 44
+    molecular_weight: 3367.8
+    formula: C152H252N44O42
+    cas_number: "446262-90-4"
+    salt_form: acetate
+    physical_form: "lyophilized powder"
+    storage_temp_c: -20
+    recommended_solvent: "Bacteriostatic Water"
+    categories: [peptides, metabolic]
+    variants:
+      - sku: CJC1295-2MG
+        mg: 2.0
+        price_cents: 3999
+        batch_id: "LOT2023-CJC-001"
+        coa_path: /images/products/cjc1295-2mg.jpg
+        quantity: 0
+      - sku: CJC1295-5MG
+        mg: 5.0
+        price_cents: 7999
+        batch_id: "LOT2023-CJC-002"
+        coa_path: /images/products/cjc1295-5mg.jpg
+        quantity: 0
+
+  - slug: ipamorelin
+    name: Ipamorelin
+    description: "Ipamorelin is a selective growth hormone secretagogue and ghrelin receptor agonist. Research applications focus on growth hormone signaling pathways, tissue metabolism, and receptor-mediated cellular responses. Laboratory studies examine GHSR-1a activation mechanisms in various experimental models."
+    sequence: ALYGLHSRVQWLKDGG
+    sequence_length: 16
+    molecular_weight: 1791.1
+    formula: C38H49N9O5
+    cas_number: "170851-70-4"
+    salt_form: acetate
+    physical_form: "lyophilized powder"
+    storage_temp_c: -20
+    recommended_solvent: "Bacteriostatic Water"
+    categories: [peptides, metabolic]
+    variants:
+      - sku: IPAMORELIN-2MG
+        mg: 2.0
+        price_cents: 2999
+        batch_id: "LOT2023-IPA-001"
+        coa_path: /images/products/ipamorelin-2mg.jpg
+        quantity: 0
+      - sku: IPAMORELIN-5MG
+        mg: 5.0
+        price_cents: 5999
+        batch_id: "LOT2023-IPA-002"
+        coa_path: /images/products/ipamorelin-5mg.jpg
+        quantity: 0
+
+  - slug: selank
+    name: Selank
+    description: "Selank is a synthetic peptide based on the endogenous tetrapeptide tuftsin. Developed for research in anxiety-related mechanisms, it shows potential as a modulator in immunological and neurological studies. Research suggests it may affect serotonergic and GABAergic systems in experimental models."
+    sequence: TKPRPGP
+    sequence_length: 7
+    molecular_weight: 751.9
+    formula: C33H57N9O8
+    cas_number: "129954-34-3"
+    salt_form: acetate
+    physical_form: "lyophilized powder"
+    storage_temp_c: -20
+    recommended_solvent: "Bacteriostatic Water"
+    categories: [peptides, cognitive]
+    variants:
+      - sku: SELANK-5MG
+        mg: 5.0
+        price_cents: 3999
+        batch_id: "LOT2023-SEL-001"
+        coa_path: /images/products/selank-5mg.jpg
+        quantity: 0
+      - sku: SELANK-10MG
+        mg: 10.0
+        price_cents: 6999
+        batch_id: "LOT2023-SEL-002"
+        coa_path: /images/products/selank-10mg.jpg
+        quantity: 0
+
+  - slug: epitalon
+    name: Epitalon
+    description: "Epitalon (Epithalon) is a tetrapeptide researched for its potential effects on telomerase activity and cellular aging mechanisms. Laboratory studies examine its interactions with cellular repair pathways and circadian rhythm mechanisms in various experimental models."
+    sequence: AEDG
+    sequence_length: 4
+    molecular_weight: 390.4
+    formula: C14H22N4O9
+    cas_number: "307297-39-8"
+    salt_form: acetate
+    physical_form: "lyophilized powder"
+    storage_temp_c: -20
+    recommended_solvent: "Bacteriostatic Water or Sterile Water"
+    categories: [peptides, aging]
+    variants:
+      - sku: EPITALON-5MG
+        mg: 5.0
+        price_cents: 4499
+        batch_id: "LOT2023-EPI-001"
+        coa_path: /images/products/epitalon-5mg.jpg
+        quantity: 0
+      - sku: EPITALON-10MG
+        mg: 10.0
+        price_cents: 7999
+        batch_id: "LOT2023-EPI-002"
+        coa_path: /images/products/epitalon-10mg.jpg
+        quantity: 0
+      - sku: EPITALON-20MG
+        mg: 20.0
+        price_cents: 13999
+        batch_id: "LOT2023-EPI-003"
+        coa_path: /images/products/epitalon-20mg.jpg
+        quantity: 0
