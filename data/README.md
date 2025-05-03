@@ -21,23 +21,24 @@ The database is designed with a hierarchical structure:
 
 1.  **Substances** - Base molecules/peptides (semaglutide, BPC-157, etc.)
 2.  **Variants** - Specific sellable SKUs (different sizes/concentrations)
-3.  **Inventory** - Stock information for each variant
-4.  **Categories** - Taxonomic organization of substances
+3.  **Batches** - Manufacturing batches of specific variants
+4.  **Inventory** - Stock information for each batch
+5.  **Categories** - Taxonomic organization of substances
 
 ### Entity Relationship Diagram
 
 ```
-┌─────────────┐       ┌─────────────┐       ┌─────────────┐
-│  SUBSTANCES │       │   VARIANTS  │       │  INVENTORY  │
-├─────────────┤       ├─────────────┤       ├─────────────┤
-│ id          │       │ id          │       │ variant_id  │
-│ slug        │◄──┐   │ substance_id│◄──┐   │ quantity    │
-│ name        │   └───│ sku         │   └───│ in_stock    │
-│ description │       │ mg          │       │ last_update │
-│ sequence    │       │ price_cents │ └─────────────┘
-│ formula     │       │ batch_id    │
-│ cas_number  │       │ coa_path    │
-│ ...         │       └─────────────┘
+┌─────────────┐       ┌─────────────┐       ┌─────────────┐       ┌─────────────┐
+│  SUBSTANCES │       │   VARIANTS  │       │   BATCHES   │       │  INVENTORY  │
+├─────────────┤       ├─────────────┤       ├─────────────┤       ├─────────────┤
+│ id          │       │ id          │       │ id          │       │ batch_id    │
+│ slug        │◄──┐   │ substance_id│◄──┐   │ variant_id  │◄──┐   │ quantity    │
+│ name        │   └───│ sku         │   └───│ batch_id    │   └───│ in_stock    │
+│ description │       │ mg          │       │ manufactured│       │ last_update │
+│ sequence    │       │ price_cents │       │ expiration  │       └─────────────┘
+│ formula     │       │ coa_path    │       │ coa_path    │
+│ cas_number  │       └─────────────┘       └─────────────┘
+│ ...         │
 └─────────────┘
        ▲
        │
@@ -53,25 +54,32 @@ The database is designed with a hierarchical structure:
 ### Key Design Principles
 
 1.  **DRY Scientific Metadata**: Molecular information (sequence, formula, CAS number, etc.) is stored once per substance
-2.  **Separate Pricing & Inventory**: Each sellable SKU has its own price and inventory records
-3.  **Efficient Updates**: Stock changes don't require rewriting large substance records
-4.  **Simple & Fast**: Optimized for single-CPU VPS deployment
+2.  **Separate Pricing & Inventory**: Each sellable SKU has its own price record
+3.  **Batch-Based Inventory**: Multiple batches can exist for each variant, each with its own inventory
+4.  **Efficient Updates**: Stock changes don't require rewriting large substance records
+5.  **Simple & Fast**: Optimized for single-CPU VPS deployment
 
-### Batch ID Usage
+### Batch-Based Inventory System
 
-The `batch_id` field in the variants table is nullable:
+The database now supports multiple batches per variant:
 
-- **Purpose:** Tracks manufacturing batch for quality control and traceability
-- **Nullability:** Can be NULL in these cases:
-  - Pre-loaded variants before batch assignment
-  - Legacy items without batch tracking
-  - Testing/demo products
-- **Required When:**
-  - Product has been physically manufactured
-  - COA (Certificate of Analysis) exists
-  - Inventory is/will be available for sale
+- **Purpose:**
+  - Track different manufacturing runs of the same product
+  - Support FIFO (First-In-First-Out) inventory management
+  - Enable batch-specific recalls if needed
+  - Track expiration dates per batch
 
-**Best Practice:** Populate batch_id before setting inventory > 0
+- **Implementation:**
+  - Each variant can have multiple batches
+  - Each batch has its own inventory record
+  - Batches include manufacturing and expiration dates
+  - Batch-specific COA (Certificate of Analysis) can be stored
+
+- **Advantages:**
+  - More accurate inventory tracking
+  - Better quality control
+  - Support for regulatory compliance
+  - Improved customer information
 
 ## 📋 Product Data (products.yaml)
 
@@ -95,6 +103,7 @@ Each substance contains:
 - Scientific metadata (sequence, molecular_weight, formula, CAS number, etc.)
 - Category associations
 - Variants (different sizes/concentrations)
+- Batch information for each variant
 
 Example:
 ```yaml
@@ -124,16 +133,44 @@ The `load_catalog.py` script:
 2.  Loads categories from `products.yaml`
 3.  Loads substances and their scientific metadata
 4.  Creates variant records with pricing information
-5.  Sets up inventory records for each variant
-6.  Enables WAL (Write-Ahead Logging) mode for better concurrency
+5.  Enables WAL (Write-Ahead Logging) mode for better concurrency
 
-### Running the Script
+### Initial Data vs. Production Data
 
-```bash
-python load_catalog.py [output_db_name]
+The initial product data in `products.yaml` includes `batch_id` values for each variant, but these are only for reference. During the initial database loading process:
+
+- Only substances, categories, and variants are created
+- No batch records are created
+- No inventory records are created
+
+This approach treats the initial data as product placeholders only. In a production environment, you would:
+
+1. Start with this baseline catalog of substances and variants
+2. Add batches as products are manufactured
+3. Update inventory as batches are received
+
+### Adding Batches
+
+After the initial database is created, batches can be added through the admin API or direct SQL:
+
+```sql
+-- Add a new batch for an existing variant
+INSERT INTO batches (variant_id, batch_id, manufactured, expiration)
+VALUES (
+    (SELECT id FROM variants WHERE sku = 'BPC157-5MG'),
+    'LOT2023-BPC-001',
+    '2023-10-01',
+    '2024-10-01'
+);
+
+-- Add inventory for the new batch
+INSERT INTO inventory (batch_id, quantity, in_stock)
+VALUES (
+    last_insert_rowid(),
+    100,
+    1
+);
 ```
-
-If no output name is provided, it defaults to `catalog.db` in the `database` directory.
 
 ## 🔍 Key Database Features
 
@@ -148,9 +185,16 @@ The schema includes triggers to:
 Optimized indexes for common query patterns:
 - `idx_substances_slug` - Fast lookup by substance slug
 - `idx_variants_substance` - Fast retrieval of all variants for a substance
+- `idx_batches_variant` - Fast retrieval of all batches for a variant
+- `idx_batches_expiration` - Quick filtering of batches by expiration date
 - `idx_inventory_instock` - Quick filtering of in-stock items
 
-### 3. WAL Mode
+### 3. Views
+
+The schema includes a view for common queries:
+- `variant_inventory` - Aggregates inventory across all batches for each variant
+
+### 4. WAL Mode
 
 The database uses SQLite's Write-Ahead Logging (WAL) mode for:
 - Better concurrency (readers don't block writers)
@@ -165,10 +209,36 @@ The database uses SQLite's Write-Ahead Logging (WAL) mode for:
 2.  Run `load_catalog.py` to rebuild the database
 3.  Deploy the updated database to the production environment
 
+### Adding New Batches
+
+New batches can be added through:
+1.  The admin API (for production use)
+2.  Direct SQL insertion (for development/testing)
+
+Example SQL:
+```sql
+-- Add a new batch for an existing variant
+INSERT INTO batches (variant_id, batch_id, manufactured, expiration)
+VALUES (
+    (SELECT id FROM variants WHERE sku = 'BPC157-5MG'),
+    'LOT2023-BPC-004',
+    '2023-10-01',
+    '2024-10-01'
+);
+
+-- Add inventory for the new batch
+INSERT INTO inventory (batch_id, quantity, in_stock)
+VALUES (
+    last_insert_rowid(),
+    100,
+    1
+);
+```
+
 ### Updating Inventory
 
 Inventory updates are handled through the API:
-- `PATCH /api/sku/{id}` endpoints update stock levels
+- `PATCH /api/batch/{id}` endpoints update stock levels
 - Changes are written directly to the `inventory` table
 - No need to rebuild the entire database for stock changes
 
@@ -187,6 +257,8 @@ When adding new products, ensure:
 4.  Categories referenced in substances exist in the categories section
 5.  Scientific values use appropriate units (mg, Daltons, etc.)
 6.  CAS numbers are correctly formatted and valid
+7.  Expiration dates are in the future
+8.  Manufacturing dates are in the past
 
 ## 🔮 Future Enhancements
 
@@ -195,6 +267,7 @@ The schema includes comments about potential future additions:
 - Price history logging
 - Admin change auditing
 - JSON field indexing for advanced filtering
+- Batch transfer tracking between locations
 
 ## 📝 Best Practices
 
@@ -204,3 +277,5 @@ The schema includes comments about potential future additions:
 4.  **Documentation**: Update this README when making schema changes
 5.  **Data Integrity**: Use the provided Python script for all bulk data changes
 6.  **CAS Numbers**: Always include valid CAS registry numbers for all substances
+7.  **Batch Management**: Follow FIFO principles when fulfilling orders
+8.  **Expiration Tracking**: Regularly check for approaching expiration dates
