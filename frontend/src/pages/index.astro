@@ -19,9 +19,14 @@ import '../components/LivePriceUpdater';
   </section>
 
   <!-- Apply the hex grid background here -->
-  <section class="py-12 bg-secondary rounded-lg my-12 bg-hex-pattern">
-    <div class="max-w-4xl mx-auto">
+  {/* Remove rounded-lg from section, remove max-w-4xl mx-auto from the immediate child div */}
+  <section class="py-12 bg-secondary my-12 bg-hex-pattern">
+    {/* Add container for heading */}
+    <div class="max-w-4xl mx-auto px-4">
       <h2 class="text-2xl font-bold mb-6 text-center">Why Kleis?</h2>
+    </div>
+    {/* Add container for grid, keeping grid classes the same */}
+    <div class="max-w-4xl mx-auto px-4">
       <div class="grid md:grid-cols-3 gap-8">
         <div class="bg-background p-6 rounded-lg shadow-card-visible text-center border-t-2 border-accent">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mx-auto mb-2 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -45,7 +50,7 @@ import '../components/LivePriceUpdater';
           <p class="text-muted-foreground">We stand behind our product. Anything that misses spec is refunded or replaced—fast, no forms, no excuses.</p>
         </div>
       </div>
-    </div>
+    </div> {/* Close grid container */}
   </section>
 
   <section class="py-12">

@@ -1,5 +1,6 @@
 ---
 import '../styles/globals.css';
+import Header from '../components/Header'; // Import the new Header component
 
 interface Props {
   title: string;
@@ -23,23 +24,16 @@ const {
   </head>
   <body>
     <div class="min-h-screen flex flex-col">
-      <header class="bg-background border-b border-border">
-        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
-          <a href="/" class="text-xl font-bold text-[#002855]">KLEIS</a>
-          <nav class="flex gap-4">
-            <a href="/" class="text-sm text-foreground hover:text-primary">Home</a>
-            <a href="/about" class="text-sm text-foreground hover:text-primary">About</a>
-            <a href="/products" class="text-sm text-foreground hover:text-primary">Products</a>
-          </nav>
-        </div>
-      </header>
+      {/* Replace the old header with the new Header component */}
+      {/* Use client:load to ensure interactivity is available immediately */}
+      <Header client:load />
       
-      <main class="flex-1 container mx-auto px-4 py-8">
+      <main class="flex-1 container mx-auto py-8 px-0">
         <slot />
       </main>
       
       <footer class="bg-muted py-6">
-        <div class="container mx-auto px-4 text-center text-sm text-muted-foreground">
+        <div class="container mx-auto px-4 text-center text-sm text-gray-300">
           &copy; {new Date().getFullYear()} Kleis Scientific. All rights reserved.
         </div>
       </footer>
