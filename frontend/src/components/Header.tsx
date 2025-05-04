@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Menu, X } from 'lucide-react';
-import { Button } from '@/components/ui/button'; // Assuming Button component exists
-import { cn } from '@/lib/utils'; // Assuming cn utility exists
+import { Menu, X, Mail } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 interface NavItem {
   label: string;
@@ -31,18 +31,32 @@ export default function Header() {
           KLEIS
         </a>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex gap-4"> {/* Adjusted gap slightly */}
-          {NAV_ITEMS.map((item) => (
-            <a
-              key={item.label}
-              href={item.href}
-              className="text-lg font-medium text-foreground hover:text-primary hover:bg-muted/10 px-3 py-1 rounded-md transition-colors" // Added hover:bg-muted/10, padding, and rounded-md
-            >
-              {item.label}
-            </a>
-          ))}
-        </nav>
+        {/* Desktop Navigation & Contact Button Wrapper */}
+        {/* Wrap nav and button, keep hidden on mobile */}
+        <div className="hidden md:flex items-center gap-6"> {/* Increased gap slightly */}
+          {/* Desktop Navigation Links */}
+          <nav className="flex gap-4">
+            {NAV_ITEMS.map((item) => (
+              <a
+                key={item.label}
+                href={item.href}
+                className="text-lg font-medium text-foreground hover:text-primary hover:bg-muted/10 px-3 py-1 rounded-md transition-colors"
+              >
+                {item.label}
+              </a>
+            ))}
+          </nav>
+
+          {/* Contact Us Button (Desktop) */}
+          <a
+            href="/contact"
+            className="flex items-center bg-background text-foreground font-bold border border-border rounded-md px-4 py-1 text-lg hover:bg-muted/10 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 transition-colors"
+          >
+            Contact Us
+            <Mail className="ml-2 h-4 w-4 text-[#A4F600]" />
+          </a>
+        </div>
+
 
         {/* Mobile Menu Button */}
         <div className="md:hidden">
@@ -64,17 +78,27 @@ export default function Header() {
           isMobileMenuOpen ? 'max-h-screen border-t border-border' : 'max-h-0'
         )}
       >
-        <nav className="flex flex-col px-2 pt-2 pb-4 gap-1"> {/* Adjusted padding and gap */}
+        <nav className="flex flex-col px-2 pt-2 pb-4 gap-1">
           {NAV_ITEMS.map((item) => (
             <a
               key={item.label}
               href={item.href}
-              className="block text-lg font-medium text-foreground hover:text-primary hover:bg-muted/10 px-3 py-2 rounded-md transition-colors" // Added hover:bg-muted/10, padding, and rounded-md
-              onClick={() => setIsMobileMenuOpen(false)} // Close menu on click
+              // Adjusted font size back to text-lg as per previous state, kept hover/padding
+              className="block text-lg font-medium text-foreground hover:text-primary hover:bg-muted/10 px-3 py-2 rounded-md transition-colors"
+              onClick={() => setIsMobileMenuOpen(false)}
             >
               {item.label}
             </a>
           ))}
+          {/* Add Contact Us Button (Mobile) */}
+          <a
+            href="/contact"
+            className="mt-2 flex items-center justify-center bg-background text-foreground font-bold border border-border rounded-md px-4 py-1 text-lg hover:bg-muted/10 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 transition-colors"
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
+            Contact Us
+            <Mail className="ml-2 h-4 w-4 text-[#A4F600]" />
+          </a>
           {/* Optional: Add mobile Sign In/Sign Up */}
           {/* <div className="flex flex-col gap-3 pt-4 border-t border-border">
              <Button variant="outline" asChild>
