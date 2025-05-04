@@ -91,11 +91,11 @@ DEBUG=true
 
 ```bash
 # Start the development server with auto-reload
-uvicorn src.main:app --reload --port 8000
+uv run uvicorn src.main:app --reload --port 8000
+
+# Start the production server
+uv run uvicorn src.main:app --host 0.0.0.0 --port 8000
 ```
-
-### Production Mode
-
 ```bash
 # Start the production server
 uvicorn src.main:app --host 0.0.0.0 --port 8000
@@ -196,10 +196,10 @@ uv lock --upgrade-package package-name
 
 ## 🔍 Dependency Management Benefits with uv
 
-- **Faster Installations**: uv's parallel downloads and optimized resolver make dependency installation much faster
-- **Reproducible Builds**: The uv.lock file ensures consistent environments across development and production
+- **Faster Installations**: uv's parallel downloads and optimized resolver
+- **Reproducible Builds**: The uv.lock file ensures consistent environments
 - **Improved Security**: Reduced supply chain risks with better dependency resolution
-- **Simplified Workflow**: Compatible with existing Python tooling while providing better performance
+- **Simplified Workflow**: Single tool for dependency management
 
 ## 🧠 Development Guidelines
 
