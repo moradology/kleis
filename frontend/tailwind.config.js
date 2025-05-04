@@ -47,6 +47,12 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // Add direct HEX references for convenience
+        navy: "#002855",
+        lime: "#A4F600",
+        slate: "#6B7280",
+        blue: "#364F6B",
+        error: "#FF4D4F",
       },
       borderRadius: {
         lg: "var(--radius)",
