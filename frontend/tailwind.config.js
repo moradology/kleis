@@ -54,6 +54,10 @@ module.exports = {
         blue: "#364F6B",
         error: "#FF4D4F",
       },
+      // Add boxShadow extension
+      boxShadow: {
+        'card-visible': '0 4px 6px -1px rgba(255, 255, 255, 0.2), 0 2px 4px -2px rgba(255, 255, 255, 0.2)',
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
