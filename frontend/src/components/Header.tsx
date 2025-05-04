@@ -13,6 +13,7 @@ interface NavItem {
 const NAV_ITEMS: NavItem[] = [
   { label: 'Products', href: '/products' },
   { label: 'About', href: '/about' },
+  { label: 'Contact Us', href: '/contact' },
   // Add more items as needed
 ];
 
@@ -26,14 +27,14 @@ export default function Header() {
   return (
     <header className="bg-background border-b border-border sticky top-0 z-50">
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-        {/* Logo */}
-        <a href="/" className="text-2xl font-bold text-navy">
-          KLEIS
+        <a href="/" className="flex items-center text-2xl font-bold text-navy"> {/* Added flex, items-center, gap */}
+          <img src="/logo.svg" alt="Kleis Scientific Logo" className="h-8 w-auto" /> {/* Added image */}
+          <span>KLEIS</span>
         </a>
 
         {/* Desktop Navigation & Contact Button Wrapper */}
         {/* Wrap nav and button, keep hidden on mobile */}
-        <div className="hidden md:flex items-center gap-6"> {/* Increased gap slightly */}
+        <div className="hidden md:flex items-center gap-6">
           {/* Desktop Navigation Links */}
           <nav className="flex gap-4">
             {NAV_ITEMS.map((item) => (
@@ -46,15 +47,6 @@ export default function Header() {
               </a>
             ))}
           </nav>
-
-          {/* Contact Us Button (Desktop) */}
-          <a
-            href="/contact"
-            className="flex items-center bg-background text-foreground font-bold border border-border rounded-md px-4 py-1 text-lg hover:bg-muted/10 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 transition-colors"
-          >
-            Contact Us
-            <Mail className="ml-2 h-4 w-4 text-[#A4F600]" />
-          </a>
         </div>
 
 
@@ -83,14 +75,12 @@ export default function Header() {
             <a
               key={item.label}
               href={item.href}
-              // Adjusted font size back to text-lg as per previous state, kept hover/padding
               className="block text-lg font-medium text-foreground hover:text-primary hover:bg-muted/10 px-3 py-2 rounded-md transition-colors"
               onClick={() => setIsMobileMenuOpen(false)}
             >
               {item.label}
             </a>
           ))}
-          {/* Add Contact Us Button (Mobile) */}
           <a
             href="/contact"
             className="mt-2 flex items-center justify-center bg-background text-foreground font-bold border border-border rounded-md px-4 py-1 text-lg hover:bg-muted/10 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 transition-colors"

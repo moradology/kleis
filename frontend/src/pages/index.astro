@@ -36,7 +36,7 @@ import ProductCard from '../components/ProductCard.astro'; // Import the new com
           <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mx-auto mb-2 text-primary" fill="none" viewBox="0 0 24 24" stroke="#002855" stroke-width="2">
             <path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 8v4.172a2 2 0 0 0 .586 1.414l5.71 5.71a2.41 2.41 0 0 0 3.408 0l3.592 -3.592a2.41 2.41 0 0 0 0 -3.408l-5.71 -5.71a2 2 0 0 0 -1.414 -.586h-4.172a2 2 0 0 0 -2 2z" /><path d="M18 19l1.592 -1.592a4.82 4.82 0 0 0 0 -6.816l-4.592 -4.592" /><path d="M7 10h-.01" />
           </svg>
-          <h3 class="text-xl font-semibold mb-2">Batch Identified</h3>
+          <h3 class="text-xl font-semibold mb-2">Batch Identification</h3>
           <p class="text-muted-foreground">Our products are tagged with a batch identification, enabling traceability and reproducibility.</p>
         </div>
         {/* Card 3: Guarantees */}
@@ -45,7 +45,7 @@ import ProductCard from '../components/ProductCard.astro'; // Import the new com
             <path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M11.46 20.846a12 12 0 0 1 -7.96 -14.846a12 12 0 0 0 8.5 -3a12 12 0 0 0 8.5 3a12 12 0 0 1 -.09 7.06" /><path d="M15 19l2 2l4 -4" />
           </svg>
           <h3 class="text-xl font-semibold mb-2">Quality Guaranteed</h3>
-          <p class="text-muted-foreground">Anything that misses spec is refunded or replaced—fast, no forms, no excuses.</p>
+          <p class="text-muted-foreground">Anything that misses spec is refunded or replaced—fast. No forms. No excuses.</p>
         </div>
       </div>
     </div>
@@ -55,7 +55,7 @@ import ProductCard from '../components/ProductCard.astro'; // Import the new com
     <div class="max-w-4xl mx-auto">
       <h2 class="text-2xl font-bold mb-6 text-center">Product Examples</h2>
 
-      {/* Use the ProductCard component for the first example */}
+      {/* ProductCard component in-stock example */}
       <ProductCard
         id="123"
         name="Example Product"
@@ -65,7 +65,7 @@ import ProductCard from '../components/ProductCard.astro'; // Import the new com
         mg={500}
       />
 
-      {/* Use the ProductCard component for the out-of-stock example */}
+      {/* ProductCard component out-of-stock example */}
       <div class="mt-8"> {/* Keep the margin-top wrapper */}
         <ProductCard
           id="456"

@@ -1,6 +1,7 @@
 ---
 import '../styles/globals.css';
 import Header from '../components/Header'; // Import the new Header component
+import Footer from '../components/Footer'; // Import the new Footer component
 
 interface Props {
   title: string;
@@ -19,7 +20,8 @@ const {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <title>{title}</title>
   </head>
   <body>
@@ -32,11 +34,7 @@ const {
         <slot />
       </main>
       
-      <footer class="bg-muted py-6">
-        <div class="container mx-auto px-4 text-center text-sm text-gray-300">
-          &copy; {new Date().getFullYear()} Kleis Scientific. All rights reserved.
-        </div>
-      </footer>
+      <Footer client:visible />
     </div>
   </body>
 </html>
