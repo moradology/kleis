@@ -1,0 +1,68 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ProductCard from '../components/ProductCard.tsx';
+---
+
+<Layout title="Products - Kleis Scientific">
+  <section class="py-12">
+    <div class="max-w-4xl mx-auto">
+      <h1 class="text-3xl font-bold mb-2 text-center text-[#002855]">Research Compounds</h1>
+      <p class="text-center text-muted-foreground mb-8">All products are for research use only. Not for therapeutic use or human consumption.</p>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-1">
+        <ProductCard
+          client:load
+          id="123"
+          name="BPC-157"
+          catalogNumber="Cat. #RC157"
+          description="Synthetic peptide with potential tissue repair properties"
+          purity="≥98%"
+          variants={[
+            { quantity: "2mg", price: 14, stock: 15 },
+            { quantity: "5mg", price: 28, stock: 8 },
+            { quantity: "10mg", price: 45, stock: 3 }
+          ]}
+        />
+
+        <ProductCard
+          client:load
+          id="124"
+          name="TB-500"
+          catalogNumber="Cat. #RC124"
+          description="Synthetic peptide for tissue repair research"
+          purity="≥99%"
+          variants={[
+            { quantity: "5mg", price: 45, stock: 12 },
+            { quantity: "10mg", price: 80, stock: 0 }
+          ]}
+        />
+
+        <ProductCard
+          client:load
+          id="125"
+          name="Cerebrolysin"
+          catalogNumber="Cat. #RC125"
+          description="Neurotropic peptide complex for CNS research"
+          purity="≥97%"
+          variants={[
+            { quantity: "2ml", price: 25, stock: 20 },
+            { quantity: "5ml", price: 55, stock: 5 }
+          ]}
+        />
+
+        <ProductCard
+          client:load
+          id="126"
+          name="Selank"
+          catalogNumber="Cat. #RC126"
+          description="Anxiolytic peptide for neuropharmacology studies"
+          purity="≥98.5%"
+          variants={[
+            { quantity: "5mg", price: 35, stock: 0 },
+            { quantity: "10mg", price: 60, stock: 0 }
+          ]}
+        />
+      </div>
+    </div>
+  </section>
+</Layout>
