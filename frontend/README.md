@@ -148,3 +148,12 @@ When adding new features:
 3. Keep components small and focused
 4. Prefer composition over inheritance
 5. Document your code with comments
+
+## Color scheme
+- black #000000
+- whites #FFFFFF
+- grays ( #333333, #666666, #999999, #CCCCCC, etc.)
+- primary (navy) #002855
+- secondary (blue-grey) #364F6B
+- accent (electric lime) #A4F600
+- danger/error/alert (red) #FF4D4F
