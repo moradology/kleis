@@ -1,6 +1,143 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import ProductCard from '../components/ProductCard.tsx';
+import Database from 'better-sqlite3';
+import path from 'path';
+
+// Define TypeScript interfaces for our product data structure
+interface ProductVariant {
+  variant_id: number;
+  sku: string;
+  quantity: string; // e.g., "5mg"
+  price: number;    // e.g., 49.99
+  stock: number;    // e.g., 15
+  // If coa_path was added in a previous step, ensure it's here:
+  // coa_path?: string | null;
+}
+
+interface ProductData {
+  id: string; // Using substance_slug for the ID
+  name: string;
+  description: string;
+  purity: string; // e.g., "≥98%"
+  variants: ProductVariant[];
+  created_at: string; // Added for 'newest' sorting
+}
+
+// Define the path to the SQLite database file
+const dbPath = path.resolve(process.cwd(), '../data/database/catalog.db');
+let db: Database.Database | null = null; // Explicitly type db
+
+// Initialize products array with the defined type
+let products: ProductData[] = [];
+
+const sortParam = Astro.url.searchParams.get('sort') || 'alpha_asc';
+let orderBySql = '';
+let requiresMinPriceCTE = false;
+
+switch (sortParam) {
+  case 'alpha_asc':
+    orderBySql = 'ORDER BY s.name ASC, v.mg ASC';
+    break;
+  case 'alpha_desc':
+    orderBySql = 'ORDER BY s.name DESC, v.mg ASC';
+    break;
+  case 'price_asc':
+    orderBySql = 'ORDER BY mvp.min_price_cents ASC, s.name ASC, v.mg ASC';
+    requiresMinPriceCTE = true;
+    break;
+  case 'price_desc':
+    orderBySql = 'ORDER BY mvp.min_price_cents DESC, s.name ASC, v.mg ASC';
+    requiresMinPriceCTE = true;
+    break;
+  case 'newest':
+    orderBySql = 'ORDER BY s.created_at DESC, s.name ASC, v.mg ASC';
+    break;
+  default:
+    orderBySql = 'ORDER BY s.name ASC, v.mg ASC'; // Fallback
+}
+
+try {
+  // Attempt to connect to the database in read-only mode
+  db = new Database(dbPath, { readonly: true, fileMustExist: true });
+  console.log(`Successfully connected to database at ${dbPath}`);
+
+  // Phase 2: Querying and data transformation
+  let sqlQuery = `
+    ${requiresMinPriceCTE ? `
+    WITH MinVariantPrice AS (
+        SELECT
+            v_inner.substance_id,
+            MIN(v_inner.price_cents) as min_price_cents
+        FROM
+            variants v_inner
+        GROUP BY
+            v_inner.substance_id
+    )` : ''}
+    SELECT
+        s.slug AS substance_slug,
+        s.name AS substance_name,
+        s.description AS substance_description,
+        s.purity_percent,
+        s.created_at, -- Ensure this is selected for 'newest' sort
+        v.id AS variant_id,
+        v.sku,
+        v.mg,
+        v.price_cents,
+        -- If coa_path was added, ensure it's selected: v.coa_path,
+        COALESCE(vi.total_quantity, 0) AS stock
+        ${requiresMinPriceCTE ? ', mvp.min_price_cents' : ''}
+    FROM
+        substances s
+    JOIN
+        variants v ON s.id = v.substance_id
+    LEFT JOIN
+        variant_inventory vi ON v.id = vi.variant_id
+    ${requiresMinPriceCTE ? 'LEFT JOIN MinVariantPrice mvp ON s.id = mvp.substance_id' : ''}
+    ${orderBySql};
+  `;
+
+  const stmt = db.prepare(sqlQuery);
+  const rows = stmt.all() as any[];
+
+  const productsMap = new Map<string, ProductData>();
+
+  for (const row of rows) {
+    const slug = row.substance_slug;
+    if (!productsMap.has(slug)) {
+      productsMap.set(slug, {
+        id: slug,
+        name: row.substance_name,
+        description: row.substance_description,
+        purity: row.purity_percent ? `≥${row.purity_percent}%` : 'N/A',
+        created_at: row.created_at, // Store created_at
+        variants: [],
+      });
+    }
+
+    const product = productsMap.get(slug)!;
+    product.variants.push({
+      variant_id: row.variant_id,
+      sku: row.sku,
+      quantity: `${row.mg}mg`,
+      price: row.price_cents / 100,
+      stock: row.stock,
+      // If coa_path was added: coa_path: row.coa_path,
+    });
+  }
+
+  products = Array.from(productsMap.values());
+  console.log(`Fetched and transformed ${products.length} products with sort: ${sortParam}.`);
+
+} catch (error) {
+  console.error('Failed to connect to the database or query data:', error);
+  products = [];
+} finally {
+  if (db) {
+    db.close();
+    console.log('Database connection closed.');
+  }
+}
 ---
 
 <Layout title="Products - Kleis Scientific">
@@ -8,61 +145,53 @@ import ProductCard from '../components/ProductCard.tsx';
     <div class="max-w-4xl mx-auto">
       <h1 class="text-3xl font-bold mb-2 text-center text-[#002855]">Research Compounds</h1>
       <p class="text-center text-muted-foreground mb-8">All products are for research use only. Not for therapeutic use or human consumption.</p>
-      
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-1">
-        <ProductCard
-          client:load
-          id="123"
-          name="BPC-157"
-          catalogNumber="Cat. #RC157"
-          description="Synthetic peptide with potential tissue repair properties"
-          purity="≥98%"
-          variants={[
-            { quantity: "2mg", price: 14, stock: 15 },
-            { quantity: "5mg", price: 28, stock: 8 },
-            { quantity: "10mg", price: 45, stock: 3 }
-          ]}
-        />
 
-        <ProductCard
-          client:load
-          id="124"
-          name="TB-500"
-          catalogNumber="Cat. #RC124"
-          description="Synthetic peptide for tissue repair research"
-          purity="≥99%"
-          variants={[
-            { quantity: "5mg", price: 45, stock: 12 },
-            { quantity: "10mg", price: 80, stock: 0 }
-          ]}
-        />
-
-        <ProductCard
-          client:load
-          id="125"
-          name="Cerebrolysin"
-          catalogNumber="Cat. #RC125"
-          description="Neurotropic peptide complex for CNS research"
-          purity="≥97%"
-          variants={[
-            { quantity: "2ml", price: 25, stock: 20 },
-            { quantity: "5ml", price: 55, stock: 5 }
-          ]}
-        />
-
-        <ProductCard
-          client:load
-          id="126"
-          name="Selank"
-          catalogNumber="Cat. #RC126"
-          description="Anxiolytic peptide for neuropharmacology studies"
-          purity="≥98.5%"
-          variants={[
-            { quantity: "5mg", price: 35, stock: 0 },
-            { quantity: "10mg", price: 60, stock: 0 }
-          ]}
-        />
+      {/* Sorting Dropdown Form */}
+      <div class="mb-6 flex justify-end">
+        <form method="GET" action="/products" class="flex items-center gap-2">
+          <label for="sort-select" class="text-sm font-medium text-muted-foreground">Sort by:</label>
+          <select name="sort" id="sort-select" class="p-2 border border-border rounded-md text-sm bg-background text-foreground focus:ring-primary focus:border-primary" onchange="this.form.submit()">
+            <option value="alpha_asc">Name: A-Z</option>
+            <option value="alpha_desc">Name: Z-A</option>
+            <option value="price_asc">Price: Low to High</option>
+            <option value="price_desc">Price: High to Low</option>
+            <option value="newest">Newest Arrivals</option>
+          </select>
+        </form>
       </div>
+
+      {products.length > 0 ? (
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-1">
+          {products.map(product => (
+            <ProductCard
+              client:visible
+              id={product.id}
+              name={product.name}
+              purity={product.purity}
+              variants={product.variants}
+            />
+          ))}
+        </div>
+      ) : (
+        <p class="text-center text-muted-foreground">
+          No products found or an error occurred while loading products.
+        </p>
+      )}
     </div>
   </section>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const selectElement = document.getElementById('sort-select') as HTMLSelectElement | null;
+      if (selectElement) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const sortValue = urlParams.get('sort');
+        if (sortValue) {
+          selectElement.value = sortValue;
+        } else {
+          // Set default if no sort param is present, matching frontmatter default
+          selectElement.value = 'alpha_asc';
+        }
+      }
+    });
+  </script>
 </Layout>

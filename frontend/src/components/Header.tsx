@@ -27,8 +27,8 @@ export default function Header() {
   return (
     <header className="bg-background border-b border-border sticky top-0 z-50">
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-        <a href="/" className="flex items-center text-2xl font-bold text-navy"> {/* Added flex, items-center, gap */}
-          <img src="/logo.svg" alt="Kleis Scientific Logo" className="h-8 w-auto" /> {/* Added image */}
+        <a href="/" className="flex items-center text-2xl font-bold text-navy">
+          <img src="/logo.svg" alt="Kleis Scientific Logo" className="h-8 w-[25px] rounded-sm" loading="eager"/>
           <span>KLEIS</span>
         </a>
 

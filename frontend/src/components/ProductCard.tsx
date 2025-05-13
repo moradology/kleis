@@ -5,6 +5,8 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 interface Variant {
+  variant_id: number;
+  sku: string;
   quantity: string;
   price: number;
   stock: number;
@@ -13,7 +15,6 @@ interface Variant {
 interface ProductCardProps {
   id: string;
   name: string;
-  catalogNumber?: string;
   purity: string;
   variants?: Variant[];
 }
@@ -21,7 +22,6 @@ interface ProductCardProps {
 export default function ProductCard({
   id,
   name,
-  catalogNumber,
   purity,
   variants = []
 }: ProductCardProps) {
