@@ -24,6 +24,7 @@ substances:
     molecular_weight: 4113.58
     formula: C187H291N45O59
     cas_number: "910463-68-2"
+    purity_percent: 98.5
     salt_form: acetate
     physical_form: "lyophilized powder"
     storage_temp_c: -20
@@ -58,6 +59,7 @@ substances:
     molecular_weight: 4802.41
     formula: C215H334N56O68
     cas_number: "2381089-83-2"
+    purity_percent: 98.5
     salt_form: acetate
     physical_form: "lyophilized powder"
     storage_temp_c: -20
@@ -86,6 +88,7 @@ substances:
     molecular_weight: 4813.55
     formula: C225H348N48O68
     cas_number: "2023788-19-2"
+    purity_percent: 98.5
     salt_form: acetate
     physical_form: "lyophilized powder"
     storage_temp_c: -20
@@ -118,6 +121,7 @@ substances:
     molecular_weight: 5400.0
     formula: C244H374N64O72S2
     cas_number: "1415456-99-3"
+    purity_percent: 98.5
     salt_form: acetate
     physical_form: "lyophilized powder"
     storage_temp_c: -20
@@ -146,6 +150,7 @@ substances:
     molecular_weight: 1419.53
     formula: C62H98N16O22
     cas_number: "137525-51-0"
+    purity_percent: 98.5
     salt_form: acetate
     physical_form: "lyophilized powder"
     storage_temp_c: -20
@@ -174,6 +179,7 @@ substances:
     molecular_weight: 4963.0
     formula: C212H350N56O78S1
     cas_number: "885340-08-9"
+    purity_percent: 98.5
     salt_form: acetate
     physical_form: "lyophilized powder"
     storage_temp_c: -20
@@ -202,6 +208,7 @@ substances:
     molecular_weight: 3367.8
     formula: C152H252N44O42
     cas_number: "446262-90-4"
+    purity_percent: 98.5
     salt_form: acetate
     physical_form: "lyophilized powder"
     storage_temp_c: -20
@@ -230,6 +237,7 @@ substances:
     molecular_weight: 1791.1
     formula: C38H49N9O5
     cas_number: "170851-70-4"
+    purity_percent: 98.5
     salt_form: acetate
     physical_form: "lyophilized powder"
     storage_temp_c: -20
@@ -258,6 +266,7 @@ substances:
     molecular_weight: 751.9
     formula: C33H57N9O8
     cas_number: "129954-34-3"
+    purity_percent: 98.5
     salt_form: acetate
     physical_form: "lyophilized powder"
     storage_temp_c: -20
@@ -286,6 +295,7 @@ substances:
     molecular_weight: 390.4
     formula: C14H22N4O9
     cas_number: "307297-39-8"
+    purity_percent: 98.5
     salt_form: acetate
     physical_form: "lyophilized powder"
     storage_temp_c: -20

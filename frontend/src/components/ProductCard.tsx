@@ -57,7 +57,7 @@ export default function ProductCard({
     <div className="bg-white rounded-xs space-y-4 relative shadow-md overflow-hidden">
       <div className="bg-[#002855] px-6 py-4">
         <div className="space-y-2">
-          <a href={`/products/${id}`} className="text-xl font-bold text-white hover:text-[#A4F600] transition-colors">
+          <a href={`/products/${id}`} className="text-xl font-bold text-white hover:text-gray-300 transition-colors">
             {name}
           </a>
           <div className="text-sm text-white">
