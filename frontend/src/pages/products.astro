@@ -21,7 +21,7 @@ interface ProductData {
   description: string;
   purity: string; // e.g., "≥98%"
   variants: ProductVariant[];
-  created_at: string; // Added for 'newest' sorting
+  // created_at: string; // Removed as it's no longer used for sorting or display here
 }
 
 // Define the path to the SQLite database file
@@ -31,31 +31,8 @@ let db: Database.Database | null = null; // Explicitly type db
 // Initialize products array with the defined type
 let products: ProductData[] = [];
 
-const sortParam = Astro.url.searchParams.get('sort') || 'alpha_asc';
-let orderBySql = '';
-let requiresMinPriceCTE = false;
-
-switch (sortParam) {
-  case 'alpha_asc':
-    orderBySql = 'ORDER BY s.name ASC, v.mg ASC';
-    break;
-  case 'alpha_desc':
-    orderBySql = 'ORDER BY s.name DESC, v.mg ASC';
-    break;
-  case 'price_asc':
-    orderBySql = 'ORDER BY mvp.min_price_cents ASC, s.name ASC, v.mg ASC';
-    requiresMinPriceCTE = true;
-    break;
-  case 'price_desc':
-    orderBySql = 'ORDER BY mvp.min_price_cents DESC, s.name ASC, v.mg ASC';
-    requiresMinPriceCTE = true;
-    break;
-  case 'newest':
-    orderBySql = 'ORDER BY s.created_at DESC, s.name ASC, v.mg ASC';
-    break;
-  default:
-    orderBySql = 'ORDER BY s.name ASC, v.mg ASC'; // Fallback
-}
+// Add new fixed orderBySql for priority sorting
+const orderBySql = 'ORDER BY s.priority ASC, s.name ASC, v.mg ASC';
 
 try {
   // Attempt to connect to the database in read-only mode
@@ -63,37 +40,26 @@ try {
   console.log(`Successfully connected to database at ${dbPath}`);
 
   // Phase 2: Querying and data transformation
+  // Remove requiresMinPriceCTE logic from sqlQuery
   let sqlQuery = `
-    ${requiresMinPriceCTE ? `
-    WITH MinVariantPrice AS (
-        SELECT
-            v_inner.substance_id,
-            MIN(v_inner.price_cents) as min_price_cents
-        FROM
-            variants v_inner
-        GROUP BY
-            v_inner.substance_id
-    )` : ''}
     SELECT
         s.slug AS substance_slug,
         s.name AS substance_name,
         s.description AS substance_description,
         s.purity_percent,
-        s.created_at, -- Ensure this is selected for 'newest' sort
+        -- s.created_at, -- Removed as no longer needed for this page
         v.id AS variant_id,
         v.sku,
         v.mg,
         v.price_cents,
         -- If coa_path was added, ensure it's selected: v.coa_path,
         COALESCE(vi.total_quantity, 0) AS stock
-        ${requiresMinPriceCTE ? ', mvp.min_price_cents' : ''}
     FROM
         substances s
     JOIN
         variants v ON s.id = v.substance_id
     LEFT JOIN
         variant_inventory vi ON v.id = vi.variant_id
-    ${requiresMinPriceCTE ? 'LEFT JOIN MinVariantPrice mvp ON s.id = mvp.substance_id' : ''}
     ${orderBySql};
   `;
 
@@ -110,7 +76,7 @@ try {
         name: row.substance_name,
         description: row.substance_description,
         purity: row.purity_percent ? `≥${row.purity_percent}%` : 'N/A',
-        created_at: row.created_at, // Store created_at
+        // created_at: row.created_at, // Removed
         variants: [],
       });
     }
@@ -127,7 +93,8 @@ try {
   }
 
   products = Array.from(productsMap.values());
-  console.log(`Fetched and transformed ${products.length} products with sort: ${sortParam}.`);
+  // Update console log message
+  console.log(`Fetched and transformed ${products.length} products, sorted by priority.`);
 
 } catch (error) {
   console.error('Failed to connect to the database or query data:', error);
@@ -145,20 +112,6 @@ try {
     <div class="max-w-4xl mx-auto">
       <h1 class="text-3xl font-bold mb-2 text-center text-[#002855]">Research Compounds</h1>
       <p class="text-center text-muted-foreground mb-8">All products are for research use only. Not for therapeutic use or human consumption.</p>
-
-      {/* Sorting Dropdown Form */}
-      <div class="mb-6 flex justify-end">
-        <form method="GET" action="/products" class="flex items-center gap-2">
-          <label for="sort-select" class="text-sm font-medium text-muted-foreground">Sort by:</label>
-          <select name="sort" id="sort-select" class="p-2 border border-border rounded-md text-sm bg-background text-foreground focus:ring-primary focus:border-primary" onchange="this.form.submit()">
-            <option value="alpha_asc">Name: A-Z</option>
-            <option value="alpha_desc">Name: Z-A</option>
-            <option value="price_asc">Price: Low to High</option>
-            <option value="price_desc">Price: High to Low</option>
-            <option value="newest">Newest Arrivals</option>
-          </select>
-        </form>
-      </div>
 
       {products.length > 0 ? (
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-1">
@@ -179,19 +132,4 @@ try {
       )}
     </div>
   </section>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const selectElement = document.getElementById('sort-select') as HTMLSelectElement | null;
-      if (selectElement) {
-        const urlParams = new URLSearchParams(window.location.search);
-        const sortValue = urlParams.get('sort');
-        if (sortValue) {
-          selectElement.value = sortValue;
-        } else {
-          // Set default if no sort param is present, matching frontmatter default
-          selectElement.value = 'alpha_asc';
-        }
-      }
-    });
-  </script>
 </Layout>

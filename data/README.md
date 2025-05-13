@@ -115,6 +115,7 @@ substances:
     cas_number: "137525-51-0"
     # ... other scientific properties
     categories: [peptides, healing]
+    priority: 5 # Add priority to the example
     variants:
       - sku: BPC157-5MG
         mg: 5.0
@@ -131,9 +132,11 @@ The `load_catalog.py` script:
 
 1.  Creates a new SQLite database using the schema in `schema.sql`
 2.  Loads categories from `products.yaml`
-3.  Loads substances and their scientific metadata
+3.  Loads substances, including their `priority` for manual sort order, and their scientific metadata
 4.  Creates variant records with pricing information
 5.  Enables WAL (Write-Ahead Logging) mode for better concurrency
+
+Product listing on the frontend is now sorted based on the `priority` field (lower numbers first) defined for each substance.
 
 ### Initial Data vs. Production Data
 

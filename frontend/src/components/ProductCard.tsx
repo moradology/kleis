@@ -100,7 +100,7 @@ export default function ProductCard({
       <div className="px-2 pb-6 space-y-4">
         <div className="grid grid-cols-1 gap-2 text-sm">
           <div>
-            <span className="font-medium">Guaranteed Purity: </span>
+            <span className="font-medium">Minimum Purity: </span>
             <span>{purity}</span>
           </div>
         </div>

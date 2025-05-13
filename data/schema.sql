@@ -43,6 +43,8 @@ CREATE TABLE substances (
     --  'peptide', 'small_molecule', 'equipment', etc.
     --  Allows front‑end to branch on type if needed.
 
+    priority             INTEGER NOT NULL DEFAULT 9999, -- Manual sort order
+
     meta_json            TEXT,     -- Free‑form JSON for oddball fields
 
     created_at           TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

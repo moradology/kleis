@@ -29,6 +29,7 @@ substances:
     storage_temp_c: -20
     recommended_solvent: "Bacteriostatic Water"
     categories: [peptides, metabolic]
+    priority: 1
     variants:
       - sku: SEMAGLUTIDE-2MG
         mg: 2.0
@@ -62,6 +63,7 @@ substances:
     storage_temp_c: -20
     recommended_solvent: "Bacteriostatic Water"
     categories: [peptides, metabolic]
+    priority: 3
     variants:
       - sku: RETATRUTIDE-2MG
         mg: 2.0
@@ -89,6 +91,7 @@ substances:
     storage_temp_c: -20
     recommended_solvent: "Bacteriostatic Water"
     categories: [peptides, metabolic]
+    priority: 2
     variants:
       - sku: TIRZEPATIDE-2MG
         mg: 2.0
@@ -120,6 +123,7 @@ substances:
     storage_temp_c: -20
     recommended_solvent: "Bacteriostatic Water"
     categories: [peptides, metabolic]
+    priority: 4
     variants:
       - sku: CAGRILINTIDE-3MG
         mg: 3.0
@@ -147,6 +151,7 @@ substances:
     storage_temp_c: -20
     recommended_solvent: "0.9% Sodium Chloride (NaCl) or Bacteriostatic Water"
     categories: [peptides, tissue-repair]
+    priority: 5
     variants:
       - sku: BPC157-5MG
         mg: 5.0
@@ -174,6 +179,7 @@ substances:
     storage_temp_c: -20
     recommended_solvent: "Bacteriostatic Water"
     categories: [peptides, tissue-repair]
+    priority: 6
     variants:
       - sku: TB500-5MG
         mg: 5.0
@@ -201,6 +207,7 @@ substances:
     storage_temp_c: -20
     recommended_solvent: "Bacteriostatic Water"
     categories: [peptides, metabolic]
+    priority: 7
     variants:
       - sku: CJC1295-2MG
         mg: 2.0
@@ -228,6 +235,7 @@ substances:
     storage_temp_c: -20
     recommended_solvent: "Bacteriostatic Water"
     categories: [peptides, metabolic]
+    priority: 8
     variants:
       - sku: IPAMORELIN-2MG
         mg: 2.0
@@ -255,6 +263,7 @@ substances:
     storage_temp_c: -20
     recommended_solvent: "Bacteriostatic Water"
     categories: [peptides, cognitive]
+    priority: 9
     variants:
       - sku: SELANK-5MG
         mg: 5.0
@@ -282,6 +291,7 @@ substances:
     storage_temp_c: -20
     recommended_solvent: "Bacteriostatic Water or Sterile Water"
     categories: [peptides, aging]
+    priority: 10
     variants:
       - sku: EPITALON-5MG
         mg: 5.0

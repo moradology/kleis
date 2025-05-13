@@ -68,7 +68,14 @@ def load_data(conn, yaml_path):
                 'name': substance['name'],
                 'description': substance['description'],
                 'product_type': substance.get('product_type', 'peptide')
+                # Add priority here
             }
+            if 'priority' in substance:  # Ensure priority exists before adding
+                substance_fields['priority'] = substance['priority']
+            else:
+                # Default priority if not in YAML, though schema has a DB default
+                # This ensures the key exists for meta_json exclusion logic
+                substance_fields['priority'] = 9999
 
             # Add optional scientific fields if present
             for field in ['sequence', 'sequence_length', 'molecular_weight',
