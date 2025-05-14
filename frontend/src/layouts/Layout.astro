@@ -30,7 +30,7 @@ const {
       {/* Use client:load to ensure interactivity is available immediately */}
       <Header client:load />
       
-      <main class="flex-1 pb-8"> {/* Removed container, mx-auto, px-0 */}
+      <main class="flex-1"> {/* Removed pb-8, ProductDetailClient now handles its own padding */}
         <slot />
       </main>
       
