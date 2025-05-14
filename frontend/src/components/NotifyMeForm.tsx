@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input'; // Assuming you have an Input component
 import { useToast } from '@/components/ui/use-toast';
-import { Mail } from 'lucide-react';
+import { Mail, AlertTriangle } from 'lucide-react'; // Import AlertTriangle
 
 interface NotifyMeFormProps {
   productSlug: string;
@@ -55,12 +55,12 @@ const NotifyMeForm: React.FC<NotifyMeFormProps> = ({ productSlug, variantSku }) 
 
       if (response.ok && result.success) {
         toast({
-          title: "Subscription Confirmed!",
+          title: "Notification Enabled!",
           description: result.message || "We'll notify you when it's back in stock.",
         });
-        setEmail(''); // Clear email field on success
+        setEmail('');
       } else {
-        throw new Error(result.message || 'Failed to subscribe.');
+        throw new Error(result.message || 'Failed to set up notification.');
       }
     } catch (error) {
       console.error('Notify me submission error:', error);
@@ -76,21 +76,28 @@ const NotifyMeForm: React.FC<NotifyMeFormProps> = ({ productSlug, variantSku }) 
 
   return (
     <div className="mt-8 p-6 border border-dashed border-primary/50 rounded-lg bg-muted/20">
-      <h3 className="text-lg font-semibold text-primary mb-2">Out of Stock?</h3>
+      <h3 className="text-lg font-semibold text-primary mb-2 flex items-center">
+        <AlertTriangle size={20} className="mr-2 text-destructive" />
+        Sorry, we're out!
+      </h3>
       <p className="text-sm text-foreground/80 mb-4">
-        Enter your email below to be notified when this product is back in stock.
+        Enter your email and we'll let you know when this product is back in stock.
       </p>
-      <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
+      <form onSubmit={handleSubmit} className="flex w-full">
         <Input
           type="email"
           placeholder="your.email@example.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           disabled={isSubmitting}
-          className="flex-grow"
+          className="flex-grow rounded-r-none focus:z-10 relative"
           required
         />
-        <Button type="submit" disabled={isSubmitting} className="w-full sm:w-auto">
+        <Button
+          type="submit"
+          disabled={isSubmitting}
+          className="border border-input rounded-l-none -ml-px flex-shrink-0 relative"
+        >
           <Mail size={16} className="mr-2" />
           {isSubmitting ? 'Submitting...' : 'Notify Me'}
         </Button>
