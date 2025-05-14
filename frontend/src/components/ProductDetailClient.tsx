@@ -10,6 +10,8 @@ import StickyAddToCartBar from './StickyAddToCartBar';
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/components/ui/use-toast";
 import { Skeleton } from '@/components/ui/skeleton'; // For loading states
+import ProductSequenceInfo from './ProductSequenceInfo'; // Added import
+import StockStatusBadge from './StockStatusBadge'; // Added import
 
 interface ProductDetailClientProps {
   initialProductData: ProductDetail;
@@ -147,38 +149,56 @@ const ProductDetailClient: React.FC<ProductDetailClientProps> = ({ initialProduc
 
   return (
     <>
-      <div className="container mx-auto px-4 py-8 max-w-5xl pb-24 md:pb-8"> {/* Added padding-bottom for sticky bar */}
+      <div className="container mx-auto px-4 py-6 lg:max-w-7xl pb-24 md:pb-8"> {/* Changed max-w-4xl to lg:max-w-7xl */}
         {isLoadingStock && !liveStockData ? (
-          <>
-            <Skeleton className="h-12 w-3/4 mb-4" /> {/* Product Name */}
-            <Skeleton className="h-6 w-1/4 mb-6" /> {/* Stock Status */}
-            <Skeleton className="h-20 w-full mb-8" /> {/* Short Blurb / Specs */}
-            <Skeleton className="h-40 w-full mb-8" /> {/* Variant Selector Area */}
-            <Skeleton className="h-64 w-full" /> {/* Details Section */}
-          </>
+          <div className="space-y-6"> {/* Skeleton UI remains single column */}
+            <Skeleton className="h-12 w-3/4" />
+            <Skeleton className="h-6 w-1/4" />
+            <Skeleton className="h-20 w-full" />
+            <Skeleton className="h-40 w-full" />
+            <Skeleton className="h-64 w-full" />
+          </div>
         ) : (
-          <>
-            <ProductHero
-              productName={initialProductData.name}
-              shortBlurb={initialProductData.short_description}
-              molecularSpecs={initialProductData.molecular_specs}
-              liveOverallStockStatus={liveOverallStockStatus}
-              purityPercent={initialProductData.purity_percent}
-            />
-            <VariantSelector
-              variants={initialProductData.variants}
-              liveVariantsStock={liveStockData?.variants_stock}
-              selectedVariantSku={selectedVariantSku}
-              onSelectVariant={handleSelectVariant}
-              onAddToCart={handleAddToCart}
-              productSlug={initialProductData.slug}
-            />
-            <ProductDetailsSection
-              description={initialProductData.description}
-              sequence={initialProductData.molecular_specs.sequence}
-              storageHandling={initialProductData.storage_handling}
-              variants={initialProductData.variants}
-            />
+          <> {/* Fragment to wrap grid and RelatedProducts */}
+            <div className="lg:grid lg:grid-cols-10 lg:gap-x-8">
+              {/* Left Column: Informational Content */}
+              <div className="lg:col-span-6 space-y-6 lg:max-w-prose">
+                <ProductHero
+                  productName={initialProductData.name}
+                  shortBlurb={initialProductData.short_description}
+                  molecularSpecs={initialProductData.molecular_specs}
+                  purityPercent={initialProductData.purity_percent}
+                />
+                <ProductSequenceInfo
+                  sequence={initialProductData.molecular_specs.sequence}
+                  productName={initialProductData.name}
+                />
+                <ProductDetailsSection
+                  description={initialProductData.description}
+                  storageHandling={initialProductData.storage_handling}
+                  variants={initialProductData.variants} // Still needed for Batch/COA tab
+                />
+              </div>
+
+              {/* Right Column: Actionable Content */}
+              <div className="lg:col-span-4 mt-8 lg:mt-0 lg:sticky lg:top-24 self-start">
+                <div className="p-4 sm:p-6 bg-card border border-border rounded-lg shadow-md space-y-4">
+                  <StockStatusBadge
+                    liveOverallStockStatus={liveOverallStockStatus}
+                    className="mb-2"
+                  />
+                  <VariantSelector
+                    variants={initialProductData.variants}
+                    liveVariantsStock={liveStockData?.variants_stock}
+                    selectedVariantSku={selectedVariantSku}
+                    onSelectVariant={handleSelectVariant}
+                    onAddToCart={handleAddToCart}
+                    productSlug={initialProductData.slug}
+                  />
+                </div>
+              </div>
+            </div>
+            {/* RelatedProducts is now outside the two-column grid, will appear below it */}
             <RelatedProducts currentProductSlug={initialProductData.slug} />
           </>
         )}

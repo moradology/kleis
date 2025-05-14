@@ -10,7 +10,6 @@ interface ProductHeroProps {
   productName: string;
   shortBlurb?: string | null;
   molecularSpecs: MolecularSpecs;
-  liveOverallStockStatus: 'In Stock' | 'Out of Stock' | 'Low Stock'; // Changed from initialStockStatus
   purityPercent?: number | null;
 }
 
@@ -18,8 +17,6 @@ const ProductHero: React.FC<ProductHeroProps> = ({
   productName,
   shortBlurb,
   molecularSpecs,
-  // sequence prop is available via molecularSpecs.sequence
-  liveOverallStockStatus,
   purityPercent,
 }) => {
   const { toast } = useToast();
@@ -43,47 +40,28 @@ const ProductHero: React.FC<ProductHeroProps> = ({
         });
     }
   };
-  
-  const stockStatusText = liveOverallStockStatus === 'Low Stock' ? 'Low Stock' : liveOverallStockStatus;
-  const stockStatusColor = liveOverallStockStatus === 'In Stock'
-    ? 'bg-lime text-navy'
-    : liveOverallStockStatus === 'Low Stock'
-    ? 'bg-yellow-400 text-yellow-900' // Example for Low Stock
-    : 'bg-destructive text-destructive-foreground';
-
 
   return (
-    <section className="mb-8 pb-8 border-b">
-      <div className="flex flex-col md:flex-row justify-between items-start mb-4">
-        <h1 className="text-3xl md:text-4xl font-bold text-primary mb-2 md:mb-0">
-          {productName}
-        </h1>
-        <span
-          className={`px-3 py-1 text-sm font-semibold rounded-full ${stockStatusColor}`}
-        >
-          {stockStatusText}
-        </span>
-      </div>
+    <section className="pb-6 border-b"> {/* Reduced mb-8 and pb-8 to just pb-6 */}
+      <h1 className="text-3xl md:text-4xl font-bold text-primary mb-4"> {/* Adjusted margin */}
+        {productName}
+      </h1>
 
       {shortBlurb && (
-        <p className="text-lg text-foreground/80 mb-6">{shortBlurb}</p>
+        <p className="text-lg text-foreground/80 mb-4">{shortBlurb}</p>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 mb-6 text-sm">
-        <div><strong>Molecular Weight:</strong> {molecularSpecs.molecular_weight || 'N/A'}</div>
-        <div><strong>Molecular Formula:</strong> {molecularSpecs.molecular_formula || 'N/A'}</div>
-        <div><strong>CAS Number:</strong> {molecularSpecs.cas_number || 'N/A'}</div>
-        {molecularSpecs.sequence_length != null && <div><strong>Sequence Length:</strong> {molecularSpecs.sequence_length}</div>}
-        {molecularSpecs.salt_form && <div><strong>Salt Form:</strong> {molecularSpecs.salt_form}</div>}
-        {purityPercent != null && <div><strong>Purity:</strong> ≥{purityPercent}%</div>}
+      {/* Molecular Info and Copy Button Wrapper */}
+      <div className="md:flex md:justify-between md:items-end mb-4 text-sm leading-tight">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 flex-grow">
+          {molecularSpecs.molecular_weight && <div><strong>Molecular Weight:</strong> {molecularSpecs.molecular_weight}</div>}
+          {molecularSpecs.molecular_formula && <div><strong>Molecular Formula:</strong> {molecularSpecs.molecular_formula}</div>}
+          {molecularSpecs.cas_number && <div><strong>CAS Number:</strong> {molecularSpecs.cas_number}</div>}
+          {molecularSpecs.sequence_length != null && <div><strong>Sequence Length:</strong> {molecularSpecs.sequence_length}</div>}
+          {molecularSpecs.salt_form && <div><strong>Salt Form:</strong> {molecularSpecs.salt_form}</div>}
+          {purityPercent != null && <div><strong>Purity:</strong> {">="} {purityPercent}%</div>}
+        </div>
       </div>
-
-      {molecularSpecs.sequence && (
-        <Button onClick={handleCopySequence} variant="outline" size="sm">
-          <Copy size={16} className="mr-2" />
-          Copy Sequence
-        </Button>
-      )}
     </section>
   );
 };

@@ -75,33 +75,38 @@ const NotifyMeForm: React.FC<NotifyMeFormProps> = ({ productSlug, variantSku }) 
   };
 
   return (
-    <div className="mt-8 p-6 border border-dashed border-primary/50 rounded-lg bg-muted/20">
-      <h3 className="text-lg font-semibold text-primary mb-2 flex items-center">
-        <AlertTriangle size={20} className="mr-2 text-destructive" />
-        Sorry, we're out!
-      </h3>
-      <p className="text-sm text-foreground/80 mb-4">
-        Enter your email and we'll let you know when this product is back in stock.
-      </p>
-      <form onSubmit={handleSubmit} className="flex w-full">
-        <Input
-          type="email"
-          placeholder="your.email@example.com"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          disabled={isSubmitting}
-          className="flex-grow rounded-r-none focus:z-10 relative"
-          required
-        />
-        <Button
-          type="submit"
-          disabled={isSubmitting}
-          className="border border-input rounded-l-none -ml-px flex-shrink-0 relative"
-        >
-          <Mail size={16} className="mr-2" />
-          {isSubmitting ? 'Submitting...' : 'Notify Me'}
-        </Button>
-      </form>
+    // Removed mt-6, max-w-2xl, mx-auto. Changed p-6 to p-4.
+    <div className="p-4 border border-dashed border-primary/50 rounded-lg bg-muted/20">
+      <div className="md:flex md:items-center md:gap-6">
+        <div className="md:flex-1 mb-4 md:mb-0">
+          <h3 className="text-lg font-semibold text-primary mb-1 flex items-center">
+            <AlertTriangle size={20} className="mr-2 text-destructive" />
+            Sorry, we're out!
+          </h3>
+          <p className="text-sm text-foreground/80">
+            Enter your email and we'll let you know when this product is back in stock.
+          </p>
+        </div>
+        <form onSubmit={handleSubmit} className="flex w-full md:w-auto md:flex-1">
+          <Input
+            type="email"
+            placeholder="your.email@example.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            disabled={isSubmitting}
+            className="flex-grow rounded-r-none focus:z-10 relative"
+            required
+          />
+          <Button
+            type="submit"
+            disabled={isSubmitting}
+            className="border border-input rounded-l-none -ml-px flex-shrink-0 relative"
+          >
+            <Mail size={16} className="mr-2" />
+            {isSubmitting ? 'Submitting...' : 'Notify Me'}
+          </Button>
+        </form>
+      </div>
     </div>
   );
 };

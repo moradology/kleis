@@ -4,43 +4,27 @@ import React from 'react';
 import type { StorageHandlingInfo, ProductVariantDetail } from '@/types/product';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"; // Import Tabs
-import { useToast } from "@/components/ui/use-toast"; // Import useToast
-import { Copy, Info } from 'lucide-react';
+// Remove useToast and Copy imports as they are no longer used
+// import { useToast } from "@/components/ui/use-toast";
+// import { Copy, Info } from 'lucide-react';
 
 interface ProductDetailsSectionProps {
   description: string;
-  sequence?: string | null;
+  // sequence?: string | null; // Removed sequence prop
   storageHandling: StorageHandlingInfo;
   variants: ProductVariantDetail[];
 }
 
 const ProductDetailsSection: React.FC<ProductDetailsSectionProps> = ({
   description,
-  sequence,
+  // sequence, // Removed sequence prop
   storageHandling,
   variants,
 }) => {
-  const { toast } = useToast();
+  // const { toast } = useToast(); // Removed toast
 
-  const handleCopySequence = () => {
-    if (sequence) {
-      navigator.clipboard.writeText(sequence)
-        .then(() => {
-          toast({
-            title: "Copied to Clipboard",
-            description: "Product sequence has been copied.",
-          });
-        })
-        .catch(err => {
-          console.error('Failed to copy sequence: ', err);
-          toast({
-            variant: "destructive",
-            title: "Copy Failed",
-            description: "Could not copy sequence to clipboard.",
-          });
-        });
-    }
-  };
+  // Removed handleCopySequence function
+  // const handleCopySequence = () => { ... };
 
   const allBatches = variants.flatMap(variant =>
     variant.batches.map(batch => ({ ...batch, variantMg: variant.mg, variantSku: variant.sku }))
@@ -49,9 +33,10 @@ const ProductDetailsSection: React.FC<ProductDetailsSectionProps> = ({
   return (
     <div className="my-8">
       <Tabs defaultValue="description" className="w-full">
-        <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 mb-4">
+        {/* Updated TabsList className */}
+        <TabsList className="grid w-full grid-cols-1 sm:grid-cols-3 mb-4">
           <TabsTrigger value="description">Description</TabsTrigger>
-          {sequence && <TabsTrigger value="sequence">Sequence</TabsTrigger>}
+          {/* {sequence && <TabsTrigger value="sequence">Sequence</TabsTrigger>} Removed Sequence TabTrigger */}
           <TabsTrigger value="storage">Storage & Handling</TabsTrigger>
           <TabsTrigger value="batch_coa">Batch & COA</TabsTrigger>
         </TabsList>
@@ -60,17 +45,12 @@ const ProductDetailsSection: React.FC<ProductDetailsSectionProps> = ({
           <div className="prose max-w-none text-foreground/90 p-4 border rounded-md bg-card" dangerouslySetInnerHTML={{ __html: description }}></div>
         </TabsContent>
 
-        {sequence && (
+        {/* Removed Sequence TabsContent block */}
+        {/* {sequence && (
           <TabsContent value="sequence">
-            <div className="p-4 border rounded-md bg-card">
-              <pre className="bg-muted/50 p-4 rounded-md overflow-x-auto text-sm font-mono mb-3">{sequence}</pre>
-              <Button onClick={handleCopySequence} variant="outline" size="sm">
-                <Copy size={16} className="mr-2" />
-                Copy Sequence
-              </Button>
-            </div>
+            ...
           </TabsContent>
-        )}
+        )} */}
 
         <TabsContent value="storage">
           <div className="p-4 border rounded-md bg-card">

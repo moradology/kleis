@@ -30,16 +30,18 @@ const VariantSelector: React.FC<VariantSelectorProps> = ({
 
   const getVariantStock = (sku: string): number => {
     const stockInfo = liveVariantsStock?.find(vs => vs.sku === sku);
-    return stockInfo?.total_stock ?? 0; // Fallback to 0 if not found in live data
+    // Fallback to initial variant total_stock if live data is not yet available or doesn't include the SKU
+    const initialVariant = variants.find(v => v.sku === sku);
+    return stockInfo?.total_stock ?? initialVariant?.total_stock ?? 0;
   };
   
   const selectedVariantDetails = variants.find(v => v.sku === selectedVariantSku);
   const isSelectedVariantOutOfStock = selectedVariantDetails ? getVariantStock(selectedVariantDetails.sku) <= 0 : true;
 
   return (
-    <div className="my-8">
-      <h2 className="text-xl font-semibold mb-3 text-primary">Select Variant</h2>
-      <div className="flex flex-wrap gap-3 mb-6">
+    <div className=""> {/* Removed my-6 */}
+      <h2 className="text-xl font-semibold mb-2 text-primary">Select Variant</h2>
+      <div className="flex flex-wrap gap-x-2 gap-y-2 mb-3"> {/* Changed mb-4 to mb-3 */}
         {variants.map((variant) => {
           const stock = getVariantStock(variant.sku);
           const isSelected = selectedVariantSku === variant.sku;
@@ -51,7 +53,7 @@ const VariantSelector: React.FC<VariantSelectorProps> = ({
               variant={isSelected ? 'default' : 'outline'}
               size="lg"
               className={cn(
-                'h-auto py-2 px-4 flex flex-col items-start min-w-[120px] relative',
+                'h-auto py-1.5 px-3 flex flex-col items-start min-w-[100px] relative',
                 isSelected && 'ring-2 ring-primary ring-offset-2',
                 isOutOfStock && !isSelected && 'border-dashed text-muted-foreground opacity-70',
                 isOutOfStock && isSelected && 'border-dashed bg-destructive/80 hover:bg-destructive/70'
@@ -60,23 +62,17 @@ const VariantSelector: React.FC<VariantSelectorProps> = ({
             >
               <span className="font-semibold">{variant.mg}mg</span>
               <span className="text-sm">${(variant.price_cents / 100).toFixed(2)}</span>
-              <span className={cn(
-                "text-xs mt-1",
-                isOutOfStock ? "text-destructive-foreground" : (isSelected ? "text-primary-foreground" : "text-lime")
-              )}>
-                {isOutOfStock ? 'Out of Stock' : `Stock: ${stock}`}
-              </span>
             </Button>
           );
         })}
       </div>
 
       {selectedVariantDetails && (
-        <>
+        <div className="mt-3"> {/* Added wrapper div with mt-3 */}
           {isSelectedVariantOutOfStock ? (
             <NotifyMeForm productSlug={productSlug} variantSku={selectedVariantDetails.sku} />
           ) : (
-            <div className="mt-6 p-4 border rounded-lg bg-muted/20">
+            <div className="p-4 border rounded-lg bg-muted/20"> {/* Removed mt-4, parent div handles margin */}
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
                   <h3 className="text-lg font-semibold">
@@ -97,7 +93,7 @@ const VariantSelector: React.FC<VariantSelectorProps> = ({
               </div>
             </div>
           )}
-        </>
+        </div>
       )}
     </div>
   );
