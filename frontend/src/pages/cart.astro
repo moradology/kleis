@@ -1,0 +1,12 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import CartPageClient from '@/components/CartPageClient.tsx';
+// Mock data will be handled within CartPageClient.tsx for now
+---
+
+<Layout
+  title="Your Shopping Cart - Kleis Scientific"
+  description="Review items in your shopping cart and proceed to checkout."
+>
+  <CartPageClient client:load />
+</Layout>
