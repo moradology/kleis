@@ -8,17 +8,23 @@ interface ContactSubmission {
 }
 
 export const POST: APIRoute = async ({ request }) => {
-  if (request.headers.get("Content-Type") !== "application/json") {
-    return new Response(JSON.stringify({ success: false, message: "Invalid content type. Expected application/json." }), {
-      status: 415, // Unsupported Media Type
-      headers: { 'Content-Type': 'application/json' },
-    });
+  if (request.headers.get('Content-Type') !== 'application/json') {
+    return new Response(
+      JSON.stringify({
+        success: false,
+        message: 'Invalid content type. Expected application/json.',
+      }),
+      {
+        status: 415, // Unsupported Media Type
+        headers: { 'Content-Type': 'application/json' },
+      }
+    );
   }
 
   let data: ContactSubmission;
   try {
-    data = await request.json() as ContactSubmission;
-  } catch (error) {
+    data = (await request.json()) as ContactSubmission;
+  } catch {
     // Handle JSON parsing errors
     return new Response(JSON.stringify({ success: false, message: 'Invalid JSON payload.' }), {
       status: 400, // Bad Request
@@ -65,12 +71,18 @@ export const POST: APIRoute = async ({ request }) => {
   console.log('Message:', data.message);
 
   // Simulate processing delay (e.g., sending an email)
-  await new Promise(resolve => setTimeout(resolve, 1000));
+  await new Promise((resolve) => setTimeout(resolve, 1000));
 
-  return new Response(JSON.stringify({ success: true, message: 'Your message has been received successfully! We will get back to you shortly.' }), {
-    status: 200,
-    headers: { 'Content-Type': 'application/json' },
-  });
+  return new Response(
+    JSON.stringify({
+      success: true,
+      message: 'Your message has been received successfully! We will get back to you shortly.',
+    }),
+    {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    }
+  );
 
   // Catch-all for unexpected errors during processing (after validation)
   // This part is less likely to be hit with the current simple logging,

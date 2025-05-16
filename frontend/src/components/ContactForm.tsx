@@ -21,6 +21,12 @@ interface FormErrors {
   message?: string;
 }
 
+interface ApiResponse {
+  success: boolean;
+  message?: string;
+  errors?: Record<string, string>;
+}
+
 const ContactForm: React.FC = () => {
   const [formData, setFormData] = useState<ContactFormData>({
     name: '',
@@ -32,9 +38,7 @@ const ContactForm: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
     // Clear error when user starts typing in a field
@@ -85,7 +89,7 @@ const ContactForm: React.FC = () => {
         body: JSON.stringify(formData),
       });
 
-      const result = await response.json();
+      const result = (await response.json()) as ApiResponse;
 
       if (response.ok && result.success) {
         toast({
@@ -95,12 +99,24 @@ const ContactForm: React.FC = () => {
         setFormData({ name: '', email: '', subject: '', message: '' }); // Reset form
       } else {
         // Handle server-side validation errors or other API errors
-        let errorMessage = result.message || 'Failed to send message. Please try again.';
-        if (result.errors && typeof result.errors === 'object' && Object.keys(result.errors).length > 0) {
+        const errorMessage = result.message || 'Failed to send message. Please try again.';
+        if (
+          result.errors &&
+          typeof result.errors === 'object' &&
+          Object.keys(result.errors).length > 0
+        ) {
           // If the API returns specific field errors, you could potentially map them back to the form's error state.
           // For simplicity here, we'll just use the main message.
           // Example: const fieldErrorMessages = Object.values(result.errors).join(' ');
           // errorMessage = `${errorMessage} Details: ${fieldErrorMessages}`;
+          // For example, to set specific errors:
+          // const newApiErrors: FormErrors = {};
+          // for (const key in result.errors) {
+          //   if (Object.prototype.hasOwnProperty.call(result.errors, key) && key in formData) {
+          //     newApiErrors[key as keyof FormErrors] = result.errors[key];
+          //   }
+          // }
+          // setErrors(prev => ({...prev, ...newApiErrors}));
         }
         throw new Error(errorMessage);
       }
@@ -109,7 +125,10 @@ const ContactForm: React.FC = () => {
       toast({
         variant: 'destructive',
         title: 'Submission Failed',
-        description: error instanceof Error ? error.message : 'An unexpected error occurred. Please try again.',
+        description:
+          error instanceof Error
+            ? error.message
+            : 'An unexpected error occurred. Please try again.',
       });
     } finally {
       setIsSubmitting(false);
@@ -117,9 +136,9 @@ const ContactForm: React.FC = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={(e) => { e.preventDefault(); void handleSubmit(e); }} className="space-y-6">
       <div>
-        <label htmlFor="name" className="block text-sm font-medium text-foreground mb-1">
+        <label htmlFor="name" className="mb-1 block text-sm font-medium text-foreground">
           Full Name
         </label>
         <Input
@@ -128,16 +147,20 @@ const ContactForm: React.FC = () => {
           id="name"
           value={formData.name}
           onChange={handleChange}
-          placeholder="e.g., Rosalind Franklin"
+          placeholder="Rosalind Franklin"
           className={errors.name ? 'border-destructive' : ''}
           aria-invalid={!!errors.name}
           aria-describedby={errors.name ? 'name-error' : undefined}
         />
-        {errors.name && <p id="name-error" className="mt-1 text-sm text-destructive">{errors.name}</p>}
+        {errors.name && (
+          <p id="name-error" className="mt-1 text-sm text-destructive">
+            {errors.name}
+          </p>
+        )}
       </div>
 
       <div>
-        <label htmlFor="email" className="block text-sm font-medium text-foreground mb-1">
+        <label htmlFor="email" className="mb-1 block text-sm font-medium text-foreground">
           Email Address
         </label>
         <Input
@@ -151,11 +174,15 @@ const ContactForm: React.FC = () => {
           aria-invalid={!!errors.email}
           aria-describedby={errors.email ? 'email-error' : undefined}
         />
-        {errors.email && <p id="email-error" className="mt-1 text-sm text-destructive">{errors.email}</p>}
+        {errors.email && (
+          <p id="email-error" className="mt-1 text-sm text-destructive">
+            {errors.email}
+          </p>
+        )}
       </div>
 
       <div>
-        <label htmlFor="subject" className="block text-sm font-medium text-foreground mb-1">
+        <label htmlFor="subject" className="mb-1 block text-sm font-medium text-foreground">
           Subject
         </label>
         <Input
@@ -169,11 +196,15 @@ const ContactForm: React.FC = () => {
           aria-invalid={!!errors.subject}
           aria-describedby={errors.subject ? 'subject-error' : undefined}
         />
-        {errors.subject && <p id="subject-error" className="mt-1 text-sm text-destructive">{errors.subject}</p>}
+        {errors.subject && (
+          <p id="subject-error" className="mt-1 text-sm text-destructive">
+            {errors.subject}
+          </p>
+        )}
       </div>
 
       <div>
-        <label htmlFor="message" className="block text-sm font-medium text-foreground mb-1">
+        <label htmlFor="message" className="mb-1 block text-sm font-medium text-foreground">
           Message
         </label>
         <Textarea
@@ -187,7 +218,11 @@ const ContactForm: React.FC = () => {
           aria-invalid={!!errors.message}
           aria-describedby={errors.message ? 'message-error' : undefined}
         />
-        {errors.message && <p id="message-error" className="mt-1 text-sm text-destructive">{errors.message}</p>}
+        {errors.message && (
+          <p id="message-error" className="mt-1 text-sm text-destructive">
+            {errors.message}
+          </p>
+        )}
       </div>
 
       <div>

@@ -54,9 +54,7 @@ const SuggestProductModal: React.FC<SuggestProductModalProps> = ({ isOpen, onClo
     }
   }, [isOpen]);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
     if (errors[name as keyof FormErrors]) {
@@ -93,7 +91,7 @@ const SuggestProductModal: React.FC<SuggestProductModalProps> = ({ isOpen, onClo
     console.log('Product Suggestion:', formData);
 
     // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     setIsSubmitting(false);
     // toast({ title: "Suggestion Submitted", description: "Thank you for your product idea!" }); // Example toast
@@ -110,19 +108,23 @@ const SuggestProductModal: React.FC<SuggestProductModalProps> = ({ isOpen, onClo
         <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-black/60 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
         <DialogPrimitive.Content
           className={cn(
-            "fixed left-1/2 top-1/2 z-50 grid w-[90vw] max-w-lg -translate-x-1/2 -translate-y-1/2 gap-4 border bg-white p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 sm:rounded-lg motion-reduce:transition-none motion-reduce:transform-none"
+            'fixed left-1/2 top-1/2 z-50 grid w-[90vw] max-w-lg -translate-x-1/2 -translate-y-1/2 gap-4 border bg-white p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 motion-reduce:transform-none motion-reduce:transition-none sm:rounded-lg'
           )}
         >
           <DialogPrimitive.Title className="text-xl font-semibold text-navy">
             Suggest a Product
           </DialogPrimitive.Title>
           <DialogPrimitive.Description className="text-sm text-muted-foreground">
-            Have an idea for a product we should carry? Let us know! Your input helps us expand our catalog.
+            Have an idea for a product we should carry? Let us know! Your input helps us expand our
+            catalog.
           </DialogPrimitive.Description>
-          
-          <form onSubmit={handleSubmit} className="space-y-4">
+
+          <form onSubmit={(e) => { e.preventDefault(); void handleSubmit(e); }} className="space-y-4">
             <div>
-              <label htmlFor="suggestion-name" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="suggestion-name"
+                className="mb-1 block text-sm font-medium text-gray-700"
+              >
                 Name / Organization (Optional)
               </label>
               <Input
@@ -131,15 +133,22 @@ const SuggestProductModal: React.FC<SuggestProductModalProps> = ({ isOpen, onClo
                 value={formData.name}
                 onChange={handleChange}
                 placeholder="Marie Curie"
-                className={cn("focus-visible:ring-lime", errors.name && "border-destructive")}
+                className={cn('focus-visible:ring-lime', errors.name && 'border-destructive')}
                 aria-invalid={!!errors.name}
-                aria-describedby={errors.name ? "name-error-modal" : undefined}
+                aria-describedby={errors.name ? 'name-error-modal' : undefined}
               />
-              {errors.name && <p id="name-error-modal" className="mt-1 text-sm text-destructive">{errors.name}</p>}
+              {errors.name && (
+                <p id="name-error-modal" className="mt-1 text-sm text-destructive">
+                  {errors.name}
+                </p>
+              )}
             </div>
 
             <div>
-              <label htmlFor="suggestion-email" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="suggestion-email"
+                className="mb-1 block text-sm font-medium text-gray-700"
+              >
                 Email (Optional)
               </label>
               <Input
@@ -149,15 +158,22 @@ const SuggestProductModal: React.FC<SuggestProductModalProps> = ({ isOpen, onClo
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="marie.curie@example.com"
-                className={cn("focus-visible:ring-lime", errors.email && "border-destructive")}
+                className={cn('focus-visible:ring-lime', errors.email && 'border-destructive')}
                 aria-invalid={!!errors.email}
-                aria-describedby={errors.email ? "email-error-modal" : undefined}
+                aria-describedby={errors.email ? 'email-error-modal' : undefined}
               />
-              {errors.email && <p id="email-error-modal" className="mt-1 text-sm text-destructive">{errors.email}</p>}
+              {errors.email && (
+                <p id="email-error-modal" className="mt-1 text-sm text-destructive">
+                  {errors.email}
+                </p>
+              )}
             </div>
 
             <div>
-              <label htmlFor="suggestion-idea" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="suggestion-idea"
+                className="mb-1 block text-sm font-medium text-gray-700"
+              >
                 Suggestion <span className="text-red-500">*</span>
               </label>
               <Textarea
@@ -167,16 +183,26 @@ const SuggestProductModal: React.FC<SuggestProductModalProps> = ({ isOpen, onClo
                 onChange={handleChange}
                 placeholder="Describe the product or products you're looking for..."
                 rows={4}
-                className={cn("focus-visible:ring-lime", errors.productIdea && "border-destructive")}
+                className={cn(
+                  'focus-visible:ring-lime',
+                  errors.productIdea && 'border-destructive'
+                )}
                 aria-invalid={!!errors.productIdea}
-                aria-describedby={errors.productIdea ? "idea-error-modal" : undefined}
+                aria-describedby={errors.productIdea ? 'idea-error-modal' : undefined}
                 required
               />
-              {errors.productIdea && <p id="idea-error-modal" className="mt-1 text-sm text-destructive">{errors.productIdea}</p>}
+              {errors.productIdea && (
+                <p id="idea-error-modal" className="mt-1 text-sm text-destructive">
+                  {errors.productIdea}
+                </p>
+              )}
             </div>
 
             <div>
-              <label htmlFor="suggestion-usage" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="suggestion-usage"
+                className="mb-1 block text-sm font-medium text-gray-700"
+              >
                 Use & Urgency (Optional)
               </label>
               <Textarea
@@ -190,8 +216,14 @@ const SuggestProductModal: React.FC<SuggestProductModalProps> = ({ isOpen, onClo
               />
             </div>
 
-            <div className="flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 pt-2">
-              <Button type="button" variant="outline" onClick={onClose} disabled={isSubmitting} className="mt-2 sm:mt-0">
+            <div className="flex flex-col-reverse pt-2 sm:flex-row sm:justify-end sm:space-x-2">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={onClose}
+                disabled={isSubmitting}
+                className="mt-2 sm:mt-0"
+              >
                 Cancel
               </Button>
               <Button
@@ -201,9 +233,25 @@ const SuggestProductModal: React.FC<SuggestProductModalProps> = ({ isOpen, onClo
               >
                 {isSubmitting ? (
                   <>
-                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-navy" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    <svg
+                      className="-ml-1 mr-3 h-5 w-5 animate-spin text-navy"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
                     </svg>
                     Submitting...
                   </>
@@ -217,7 +265,7 @@ const SuggestProductModal: React.FC<SuggestProductModalProps> = ({ isOpen, onClo
           </form>
 
           <DialogPrimitive.Close
-            className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-white transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-slate-100 data-[state=open]:text-slate-500 dark:ring-offset-slate-950 dark:focus:ring-slate-300 dark:data-[state=open]:bg-slate-800 dark:data-[state=open]:text-slate-400"
+            className="focus:ring-slate-950 data-[state=open]:bg-slate-100 data-[state=open]:text-slate-500 dark:ring-offset-slate-950 dark:focus:ring-slate-300 dark:data-[state=open]:bg-slate-800 dark:data-[state=open]:text-slate-400 absolute right-4 top-4 rounded-sm opacity-70 ring-offset-white transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:pointer-events-none"
             aria-label="Close"
           >
             <XIcon className="h-4 w-4" />

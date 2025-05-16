@@ -8,7 +8,7 @@ This directory contains the database schema, product data, and loading scripts f
 data/
 ├── schema.sql         # SQLite database schema
 ├── products.yaml      # Product catalog data in YAML format
-├── load_catalog.py    # Python script to build the database
+├── init_catalog.py    # Python script to build the database
 └── database/          # Contains the generated SQLite database
     ├── catalog.db     # Main database file
     ├── catalog.db-shm # SQLite shared memory file (WAL mode)
@@ -128,7 +128,7 @@ substances:
 
 ## 🔄 Database Loading Process
 
-The `load_catalog.py` script:
+The `init_catalog.py` script:
 
 1.  Creates a new SQLite database using the schema in `schema.sql`
 2.  Loads categories from `products.yaml`
@@ -209,7 +209,7 @@ The database uses SQLite's Write-Ahead Logging (WAL) mode for:
 ### Adding New Products
 
 1.  Edit `products.yaml` to add new substances and/or variants
-2.  Run `load_catalog.py` to rebuild the database
+2.  Run `init_catalog.py` to rebuild the database
 3.  Deploy the updated database to the production environment
 
 ### Adding New Batches

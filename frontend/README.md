@@ -61,11 +61,7 @@ Example usage:
 import { Button } from '@/components/ui/button';
 
 export default function MyComponent() {
-  return (
-    <Button variant="default">
-      Click me
-    </Button>
-  );
+  return <Button variant="default">Click me</Button>;
 }
 ```
 
@@ -94,7 +90,7 @@ The project uses Astro's partial hydration model. Components can be hydrated wit
 Styling is done primarily through Tailwind CSS utilities:
 
 ```html
-<div class="flex items-center justify-between p-4 bg-white rounded-lg shadow">
+<div class="flex items-center justify-between rounded-lg bg-white p-4 shadow">
   <!-- Content -->
 </div>
 ```
@@ -114,6 +110,7 @@ docker run -p 80:80 -p 443:443 kleis-frontend
 ```
 
 The Dockerfile uses a multi-stage build process:
+
 1. Build the Astro application with Node.js
 2. Serve the static files with Caddy
 
@@ -124,14 +121,17 @@ Currently, the project doesn't have automated tests configured. This is an area 
 ## 🧠 Best Practices
 
 1. **Minimize JavaScript**
+
    - Use static HTML when possible
    - Keep React islands small and focused
 
 2. **Performance**
+
    - Use `client:visible` for components that need interactivity
    - Leverage browser APIs when possible
 
 3. **Accessibility**
+
    - Use shadcn/ui components for built-in accessibility
    - Test with keyboard navigation and screen readers
 
@@ -150,6 +150,7 @@ When adding new features:
 5. Document your code with comments
 
 ## Color scheme
+
 - black #000000
 - whites #FFFFFF
 - grays ( #333333, #666666, #999999, #CCCCCC, etc.)

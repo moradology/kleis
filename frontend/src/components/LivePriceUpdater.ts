@@ -1,5 +1,11 @@
 // This is a vanilla JS island that will fetch price/stock/mg data and patch the DOM
 
+interface LiveDataResponse {
+  price?: number;
+  stock?: number;
+  mg?: number;
+}
+
 // Make sure the code only runs in the browser
 if (typeof window !== 'undefined') {
   class LivePriceUpdater extends HTMLElement {
@@ -21,11 +27,11 @@ if (typeof window !== 'undefined') {
       this.mgElement = document.getElementById(`mg-${this.productId}`);
 
       // Initial fetch
-      this.fetchAndUpdateData();
+      void this.fetchAndUpdateData();
 
       // Set up interval for periodic updates
       this.interval = window.setInterval(() => {
-        this.fetchAndUpdateData();
+        void this.fetchAndUpdateData();
       }, 30000); // Update every 30 seconds
     }
 
@@ -42,17 +48,17 @@ if (typeof window !== 'undefined') {
 
       try {
         const response = await fetch(`/api/products/${this.productId}/live-data`);
-        
+
         if (!response.ok) {
           throw new Error(`Failed to fetch data: ${response.status}`);
         }
 
-        const data = await response.json();
-        
+        const data = (await response.json()) as LiveDataResponse;
+
         // Update DOM elements if they exist
-        if (this.priceElement && data.price) {
+        if (this.priceElement && data.price !== undefined) {
           this.priceElement.textContent = `$${data.price.toFixed(2)}`;
-          
+
           // Add animation class to highlight the change
           this.priceElement.classList.add('price-updated');
           setTimeout(() => {
@@ -61,10 +67,9 @@ if (typeof window !== 'undefined') {
         }
 
         if (this.stockElement && data.stock !== undefined) {
-          this.stockElement.textContent = data.stock > 0
-            ? `In Stock (${data.stock})`
-            : 'Out of Stock';
-            
+          this.stockElement.textContent =
+            data.stock > 0 ? `In Stock (${data.stock})` : 'Out of Stock';
+
           // Update styling based on stock status
           if (data.stock > 10) {
             this.stockElement.className = 'text-green-500';

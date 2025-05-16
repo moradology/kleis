@@ -11,6 +11,11 @@ interface NotifyMeFormProps {
   variantSku?: string | null; // Optional, if notifying for a specific variant
 }
 
+interface NotifyMeApiResponse {
+  success: boolean;
+  message?: string;
+}
+
 const NotifyMeForm: React.FC<NotifyMeFormProps> = ({ productSlug, variantSku }) => {
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -22,21 +27,21 @@ const NotifyMeForm: React.FC<NotifyMeFormProps> = ({ productSlug, variantSku }) 
 
     if (!email) {
       toast({
-        variant: "destructive",
-        title: "Email Required",
-        description: "Please enter your email address.",
+        variant: 'destructive',
+        title: 'Email Required',
+        description: 'Please enter your email address.',
       });
       setIsSubmitting(false);
       return;
     }
-    
+
     // Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       toast({
-        variant: "destructive",
-        title: "Invalid Email",
-        description: "Please enter a valid email address.",
+        variant: 'destructive',
+        title: 'Invalid Email',
+        description: 'Please enter a valid email address.',
       });
       setIsSubmitting(false);
       return;
@@ -51,11 +56,11 @@ const NotifyMeForm: React.FC<NotifyMeFormProps> = ({ productSlug, variantSku }) 
         body: JSON.stringify({ email, productSlug, variantSku }),
       });
 
-      const result = await response.json();
+      const result = (await response.json()) as NotifyMeApiResponse;
 
       if (response.ok && result.success) {
         toast({
-          title: "Notification Enabled!",
+          title: 'Notification Enabled!',
           description: result.message || "We'll notify you when it's back in stock.",
         });
         setEmail('');
@@ -65,9 +70,12 @@ const NotifyMeForm: React.FC<NotifyMeFormProps> = ({ productSlug, variantSku }) 
     } catch (error) {
       console.error('Notify me submission error:', error);
       toast({
-        variant: "destructive",
-        title: "Subscription Failed",
-        description: error instanceof Error ? error.message : "An unexpected error occurred. Please try again.",
+        variant: 'destructive',
+        title: 'Subscription Failed',
+        description:
+          error instanceof Error
+            ? error.message
+            : 'An unexpected error occurred. Please try again.',
       });
     } finally {
       setIsSubmitting(false);
@@ -75,31 +83,31 @@ const NotifyMeForm: React.FC<NotifyMeFormProps> = ({ productSlug, variantSku }) 
   };
 
   return (
-    <div className="p-4 border border-dashed border-primary/50 rounded-lg bg-muted/20">
+    <div className="rounded-lg border border-dashed border-primary/50 bg-muted/20 p-4">
       <div className="flex flex-col gap-4">
         <div className="">
-          <h3 className="text-lg font-semibold text-primary mb-1 flex items-center">
+          <h3 className="mb-1 flex items-center text-lg font-semibold text-primary">
             <AlertTriangle size={20} className="mr-2 text-destructive" />
-            Sorry, we're out!
+            Sorry, we&apos;re out!
           </h3>
           <p className="text-sm text-foreground/80">
-            Enter your email and we'll let you know when this product is back in stock.
+            Enter your email and we&apos;ll let you know when this product is back in stock.
           </p>
         </div>
-        <form onSubmit={handleSubmit} className="flex w-full">
+        <form onSubmit={(e) => { e.preventDefault(); void handleSubmit(e); }} className="flex w-full">
           <Input
             type="email"
             placeholder="your.email@example.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             disabled={isSubmitting}
-            className="flex-grow rounded-r-none focus:z-10 relative"
+            className="relative flex-grow rounded-r-none focus:z-10"
             required
           />
           <Button
             type="submit"
             disabled={isSubmitting}
-            className="border border-input rounded-l-none -ml-px flex-shrink-0 relative"
+            className="relative -ml-px flex-shrink-0 rounded-l-none border border-input"
           >
             <Mail size={16} className="mr-2" />
             {isSubmitting ? 'Submitting...' : 'Notify Me'}

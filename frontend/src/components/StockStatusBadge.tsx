@@ -6,9 +6,13 @@ interface StockStatusBadgeProps {
   className?: string;
 }
 
-const StockStatusBadge: React.FC<StockStatusBadgeProps> = ({ liveOverallStockStatus, className }) => {
-  const stockStatusText = liveOverallStockStatus === 'Low Stock' ? 'Low Stock' : liveOverallStockStatus;
-  
+const StockStatusBadge: React.FC<StockStatusBadgeProps> = ({
+  liveOverallStockStatus,
+  className,
+}) => {
+  const stockStatusText =
+    liveOverallStockStatus === 'Low Stock' ? 'Low Stock' : liveOverallStockStatus;
+
   const stockStatusStyles = {
     'In Stock': 'bg-lime text-navy',
     'Out of Stock': 'bg-destructive text-destructive-foreground',
@@ -18,7 +22,7 @@ const StockStatusBadge: React.FC<StockStatusBadgeProps> = ({ liveOverallStockSta
   return (
     <span
       className={cn(
-        'px-3 py-1 text-sm font-semibold rounded-full inline-block',
+        'inline-block rounded-full px-3 py-1 text-sm font-semibold',
         stockStatusStyles[liveOverallStockStatus] || stockStatusStyles['Out of Stock'], // Fallback to Out of Stock style if undefined
         className
       )}

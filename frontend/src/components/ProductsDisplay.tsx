@@ -9,11 +9,12 @@ interface ProductVariant {
   variant_id: number;
   sku: string;
   quantity: string; // e.g., "5mg"
-  price: number;    // e.g., 49.99
-  stock: number;    // e.g., 15
+  price: number; // e.g., 49.99
+  stock: number; // e.g., 15
 }
 
-export interface ProductData { // Exporting for potential use elsewhere
+export interface ProductData {
+  // Exporting for potential use elsewhere
   id: string; // Using substance_slug for the ID
   name: string;
   description: string; // Add description field
@@ -59,9 +60,10 @@ const ProductsDisplay: React.FC<ProductsDisplayProps> = ({ initialProducts }) =>
     }
     const lowercasedSearchTerm = searchTerm.toLowerCase();
     // Searching in both name and description
-    return initialProducts.filter(product =>
-      product.name.toLowerCase().includes(lowercasedSearchTerm) ||
-      (product.description && product.description.toLowerCase().includes(lowercasedSearchTerm))
+    return initialProducts.filter(
+      (product) =>
+        product.name.toLowerCase().includes(lowercasedSearchTerm) ||
+        (product.description && product.description.toLowerCase().includes(lowercasedSearchTerm))
     );
   }, [initialProducts, searchTerm]);
 
@@ -76,8 +78,8 @@ const ProductsDisplay: React.FC<ProductsDisplayProps> = ({ initialProducts }) =>
         hasResults={hasResults} // Pass the hasResults prop
       />
       {filteredProducts.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-1">
-          {filteredProducts.map(product => (
+        <div className="grid grid-cols-1 gap-1 md:grid-cols-2 lg:grid-cols-4">
+          {filteredProducts.map((product) => (
             <ProductCard
               key={product.id}
               id={product.id}
@@ -88,10 +90,10 @@ const ProductsDisplay: React.FC<ProductsDisplayProps> = ({ initialProducts }) =>
           ))}
         </div>
       ) : (
-        <div className="text-center py-10"> {/* Wrapper for "no results" */}
-          <p className="text-muted-foreground">
-            No products match your search criteria.
-          </p>
+        <div className="py-10 text-center">
+          {' '}
+          {/* Wrapper for "no results" */}
+          <p className="text-muted-foreground">No products match your search criteria.</p>
         </div>
       )}
     </div>
