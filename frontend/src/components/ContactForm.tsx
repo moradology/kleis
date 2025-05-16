@@ -128,7 +128,7 @@ const ContactForm: React.FC = () => {
           id="name"
           value={formData.name}
           onChange={handleChange}
-          placeholder="e.g., Rosalind Franklin"
+          placeholder="Rosalind Franklin"
           className={errors.name ? 'border-destructive' : ''}
           aria-invalid={!!errors.name}
           aria-describedby={errors.name ? 'name-error' : undefined}

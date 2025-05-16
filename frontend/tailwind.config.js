@@ -69,17 +69,22 @@ module.exports = {
       },
       keyframes: {
         "accordion-down": {
-          from: { height: 0 },
+          from: { height: "0" }, // Ensure string value for height
           to: { height: "var(--radix-accordion-content-height)" },
         },
         "accordion-up": {
           from: { height: "var(--radix-accordion-content-height)" },
-          to: { height: 0 },
+          to: { height: "0" }, // Ensure string value for height
+        },
+        "cart-badge-pulse": { // Added keyframes for cart badge pulse
+          "0%, 100%": { transform: "scale(1)" },
+          "50%": { transform: "scale(1.15)" },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "cart-badge-pulse": "cart-badge-pulse 0.6s ease-in-out", // Added animation class
       },
     },
   },
