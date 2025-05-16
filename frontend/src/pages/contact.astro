@@ -1,0 +1,39 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import ContactForm from '@/components/ContactForm.tsx'; // Import the ContactForm component
+---
+
+<Layout
+  title="Contact Us - Kleis"
+  description="Get in touch with Kleis Scientific. We're here to help with your research needs."
+>
+  <section class="py-12 md:py-20">
+    <div class="container mx-auto px-6 max-w-3xl text-center">
+      <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold text-primary mb-6">
+        Contact Us
+      </h1>
+      <p class="text-lg sm:text-xl text-foreground/80 mb-10">
+        Have a question, comment, or need support? We aim to respond to all inquiries within 24-48 business hours.
+      </p>
+
+      {/* Replace placeholder with ContactForm component */}
+      <div class="bg-card p-6 sm:p-8 border border-border rounded-lg shadow-lg text-left max-w-xl mx-auto">
+        <h2 class="text-2xl font-semibold text-primary mb-6">Send Us a Message</h2>
+        <ContactForm client:load />
+      </div>
+
+      <div class="mt-12 text-center">
+        <h2 class="text-2xl font-semibold text-primary mb-4">Other Ways to Reach Us</h2>
+        <p class="text-foreground/80 mb-2">
+          For urgent matters, or if you prefer, you can also contact us via email:
+        </p>
+        <a href="mailto:support@kleis.com" class="text-lg text-accent hover:underline">
+          support@kleis.com
+        </a>
+        <p class="text-sm text-muted-foreground mt-4">
+          (Please note: Kleis Scientific provides products for research use only.)
+        </p>
+      </div>
+    </div>
+  </section>
+</Layout>
