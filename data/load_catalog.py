@@ -123,13 +123,12 @@ def load_data(conn, yaml_path):
                 for variant in substance['variants']:
                     # Insert variant
                     cursor.execute(
-                        "INSERT INTO variants (substance_id, sku, mg, price_cents, coa_path) VALUES (?, ?, ?, ?, ?)",
+                        "INSERT INTO variants (substance_id, sku, mg, price_cents) VALUES (?, ?, ?, ?)",
                         (
                             substance_id,
                             variant['sku'],
                             variant['mg'],
-                            variant['price_cents'],
-                            variant.get('coa_path')
+                            variant['price_cents']
                         )
                     )
                     # Note: We're not creating batches or inventory records

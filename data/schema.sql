@@ -72,7 +72,6 @@ CREATE TABLE variants (
     sku            TEXT    NOT NULL UNIQUE,    -- 'SEMAGLUTIDE‑2MG'
     mg             REAL    NOT NULL,           -- 2, 5, 10 mg...
     price_cents    INTEGER NOT NULL,           -- 7999 = $79.99
-    coa_path       TEXT,                       -- /images/semaglutide‑2mg/
 
     created_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -99,7 +98,6 @@ CREATE TABLE batches (
     batch_id       TEXT    NOT NULL,           -- 'LOT2023A', manufacturing batch identifier
     manufactured   DATE,                       -- When this batch was produced
     expiration     DATE,                       -- When this batch expires
-    coa_path       TEXT,                       -- Certificate of Analysis path (can override variant)
 
     created_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
