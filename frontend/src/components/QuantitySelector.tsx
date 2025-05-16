@@ -44,7 +44,7 @@ const QuantitySelector: React.FC<QuantitySelectorProps> = ({
     }
     updateQuantity(value);
   };
-  
+
   const updateQuantity = (newQuantity: number) => {
     const validatedQuantity = Math.max(1, Math.min(newQuantity, maxQuantity));
     setQuantity(validatedQuantity);
@@ -60,9 +60,11 @@ const QuantitySelector: React.FC<QuantitySelectorProps> = ({
   };
 
   return (
-    <div className={cn("flex items-center h-9", className)}> {/* Main container is now just flex */}
+    <div className={cn('flex h-9 items-center', className)}>
+      {' '}
+      {/* Main container is now just flex */}
       {/* Quantity adjustment group */}
-      <div className="flex items-center border border-input rounded-md h-full">
+      <div className="flex h-full items-center rounded-md border border-input">
         <Button
           variant="ghost"
           size="icon"
@@ -82,7 +84,7 @@ const QuantitySelector: React.FC<QuantitySelectorProps> = ({
           onBlur={handleBlur}
           min="1"
           max={maxQuantity}
-          className="h-full w-10 text-center border-none rounded-none focus-visible:ring-0 focus-visible:ring-offset-0 px-1 text-sm"
+          className="h-full w-10 rounded-none border-none px-1 text-center text-sm focus-visible:ring-0 focus-visible:ring-offset-0"
           aria-label="Item quantity"
         />
         <Button
@@ -97,15 +99,15 @@ const QuantitySelector: React.FC<QuantitySelectorProps> = ({
           <Plus className="h-3 w-3" />
         </Button>
       </div>
-
       {/* Separator and Delete button */}
       {onDeleteItem && (
         <>
           {/* <span className="mx-2 text-muted-foreground">|</span> */} {/* Old pipe separator */}
-          <div className="h-5 w-px bg-border mx-2 self-center"></div> {/* New vertical line separator */}
+          <div className="mx-2 h-5 w-px self-center bg-border"></div>{' '}
+          {/* New vertical line separator */}
           <Button
             variant="ghost"
-            className="h-full w-auto px-2 hover:bg-destructive/10 text-muted-foreground hover:text-destructive text-xs font-medium"
+            className="h-full w-auto px-2 text-xs font-medium text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
             onClick={onDeleteItem}
             aria-label="Remove item"
           >

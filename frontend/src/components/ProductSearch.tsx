@@ -12,10 +12,15 @@ interface ProductSearchProps {
   hasResults: boolean; // Add new prop
 }
 
-const ProductSearch: React.FC<ProductSearchProps> = ({ searchTerm, onSearchChange, className, hasResults }) => {
+const ProductSearch: React.FC<ProductSearchProps> = ({
+  searchTerm,
+  onSearchChange,
+  className,
+  hasResults,
+}) => {
   return (
     <div className={`relative ${className || ''}`}>
-      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
         <SearchIcon className="h-5 w-5 text-muted-foreground" />
       </div>
       <Input
@@ -24,8 +29,8 @@ const ProductSearch: React.FC<ProductSearchProps> = ({ searchTerm, onSearchChang
         value={searchTerm}
         onChange={(e) => onSearchChange(e.target.value)}
         className={cn(
-          "pl-10",
-          hasResults ? "focus-visible:ring-lime" : "focus-visible:ring-error" // Conditional ring color
+          'pl-10',
+          hasResults ? 'focus-visible:ring-lime' : 'focus-visible:ring-error' // Conditional ring color
         )}
       />
     </div>

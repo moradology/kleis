@@ -1,48 +1,40 @@
 import React from 'react';
 // Update CartItemType import to DisplayCartItemType and related types
-import type { CartItemType, RemovedItemPlaceholderType, DisplayCartItemType } from '@/types/cart';
+// import type { CartItemType, RemovedItemPlaceholderType, DisplayCartItemType } from '@/types/cart';
+import type { CartItemType } from '@/types/cart'; // Simplified import
 import QuantitySelector from './QuantitySelector';
-import { Button } from '@/components/ui/button';
-import { Trash2, X } from 'lucide-react'; // X for mobile remove, Trash2 for desktop
-import { cn } from '@/lib/utils';
+// import { Button } from '@/components/ui/button'; // Unused
+// import { Trash2, X } from 'lucide-react'; // Unused
+// import { cn } from '@/lib/utils'; // Unused
 
 interface CartItemProps {
   // Update item prop type
-  item: DisplayCartItemType;
+  item: CartItemType; // Item is now strictly CartItemType
   onUpdateQuantity: (itemId: string, newQuantity: number) => void;
-  onRemoveItem: (itemId:string) => void;
+  onRemoveItem: (itemId: string) => void;
 }
 
 const CartItem: React.FC<CartItemProps> = ({ item, onUpdateQuantity, onRemoveItem }) => {
-  // Check if item is a placeholder for a removed item
-  if ('type' in item && item.type === 'removed-placeholder') {
-    const removedPlaceholder = item as RemovedItemPlaceholderType;
-    return (
-      <li className="flex py-6 px-4 my-2 items-center justify-center text-center">
-        <p className="text-sm text-muted-foreground">
-          <a href={removedPlaceholder.href} className="font-semibold text-primary hover:underline">
-            {removedPlaceholder.name} {removedPlaceholder.variant}
-          </a>
-          {' '}was removed from your cart.
-        </p>
-      </li>
-    );
-  }
+  // Check if item is a placeholder for a removed item - REMOVED
+  // if ('type' in item && item.type === 'removed-placeholder') { ... }
 
-  // Cast item to CartItemType for the rest of the component if not a placeholder
-  const cartItem = item as CartItemType;
+  // Cast item to CartItemType for the rest of the component if not a placeholder - REMOVED
+  // const cartItem = item as CartItemType;
+  const cartItem = item; // item is already CartItemType
 
   const handleQuantityChange = (newQuantity: number) => {
     onUpdateQuantity(cartItem.id, newQuantity);
   };
 
   return (
-    <li className="flex flex-col py-6 sm:py-8 px-2 sm:px-4">
+    <li className="flex flex-col px-2 py-6 sm:px-4 sm:py-8">
       {/* Desktop View: Two Rows */}
       {/* Desktop Row 1: Product Info, Unit Price, Remove Button */}
-      <div className="hidden lg:grid lg:grid-cols-12 lg:gap-x-6 lg:items-center">
+      <div className="hidden lg:grid lg:grid-cols-12 lg:items-center lg:gap-x-6">
         {/* Product Info (Name/Variant) */}
-        <div className="lg:col-span-9"> {/* Adjusted from lg:col-span-8 */}
+        <div className="lg:col-span-9">
+          {' '}
+          {/* Adjusted from lg:col-span-8 */}
           <h3 className="text-base font-medium text-primary hover:text-primary/80">
             <a href={cartItem.href}>{cartItem.name}</a>
           </h3>
@@ -50,12 +42,12 @@ const CartItem: React.FC<CartItemProps> = ({ item, onUpdateQuantity, onRemoveIte
         </div>
 
         {/* Desktop Unit Price */}
-        <div className="lg:col-span-3 lg:text-right lg:pl-4">
+        <div className="lg:col-span-3 lg:pl-4 lg:text-right">
           <p className="text-sm font-medium text-foreground">
             ${(cartItem.unitPrice / 100).toFixed(2)}
           </p>
         </div>
-        
+
         {/* Desktop Remove Button - REMOVED */}
         {/*
         <div className="lg:col-span-1 lg:flex lg:justify-end lg:px-4">
@@ -73,7 +65,9 @@ const CartItem: React.FC<CartItemProps> = ({ item, onUpdateQuantity, onRemoveIte
       </div>
 
       {/* Desktop Row 2: Quantity Selector */}
-      <div className="hidden lg:block mt-3"> {/* Added mt-3 for spacing */}
+      <div className="mt-3 hidden lg:block">
+        {' '}
+        {/* Added mt-3 for spacing */}
         <QuantitySelector
           id={`quantity-desktop-${cartItem.id}`}
           initialQuantity={cartItem.quantity}
@@ -85,9 +79,11 @@ const CartItem: React.FC<CartItemProps> = ({ item, onUpdateQuantity, onRemoveIte
       </div>
 
       {/* Mobile View: Stacked Layout */}
-      <div className="lg:hidden flex flex-col">
+      <div className="flex flex-col lg:hidden">
         {/* Product Info (Name/Variant) */}
-        <div className="mb-2"> {/* Reduced mb-4 to mb-2 */}
+        <div className="mb-2">
+          {' '}
+          {/* Reduced mb-4 to mb-2 */}
           <h3 className="text-base font-medium text-primary hover:text-primary/80">
             <a href={cartItem.href}>{cartItem.name}</a>
           </h3>
@@ -95,12 +91,15 @@ const CartItem: React.FC<CartItemProps> = ({ item, onUpdateQuantity, onRemoveIte
         </div>
 
         {/* Mobile Unit Price */}
-        <p className="text-sm text-muted-foreground mb-3"> {/* Added mb-3 */}
-          ${(cartItem.unitPrice / 100).toFixed(2)} each
+        <p className="mb-3 text-sm text-muted-foreground">
+          {' '}
+          {/* Added mb-3 */}${(cartItem.unitPrice / 100).toFixed(2)} each
         </p>
 
         {/* Mobile Quantity Selector */}
-        <div className="mb-3"> {/* Added mb-3 */}
+        <div className="mb-3">
+          {' '}
+          {/* Added mb-3 */}
           <QuantitySelector
             id={`quantity-mobile-${cartItem.id}`}
             initialQuantity={cartItem.quantity}
@@ -110,7 +109,7 @@ const CartItem: React.FC<CartItemProps> = ({ item, onUpdateQuantity, onRemoveIte
             className="h-9" // Removed w-32
           />
         </div>
-        
+
         {/* Mobile Remove Button - REMOVED */}
         {/*
         <div className="flex justify-start">

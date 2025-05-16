@@ -21,9 +21,12 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
   return (
     <section
       aria-labelledby="order-summary-heading"
-      className="mt-16 rounded-lg bg-muted/30 p-6 lg:col-span-5 lg:mt-0 lg:sticky lg:top-24" // Adjusted top-28 to top-24
+      className="mt-16 rounded-lg bg-muted/30 p-6 lg:sticky lg:top-24 lg:col-span-5 lg:mt-0" // Adjusted top-28 to top-24
     >
-      <h2 id="order-summary-heading" className="text-xl font-semibold text-primary border-b border-border pb-4">
+      <h2
+        id="order-summary-heading"
+        className="border-b border-border pb-4 text-xl font-semibold text-primary"
+      >
         Order Summary
       </h2>
       <dl className="mt-6 space-y-4">
@@ -50,7 +53,10 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
         </Button>
       </div>
       <div className="mt-6 text-center">
-        <a href="/products" className="text-sm font-medium text-primary hover:text-primary/80 hover:underline">
+        <a
+          href="/products"
+          className="text-sm font-medium text-primary hover:text-primary/80 hover:underline"
+        >
           or Continue Shopping <span aria-hidden="true"> &rarr;</span>
         </a>
       </div>

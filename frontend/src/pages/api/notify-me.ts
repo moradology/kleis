@@ -1,15 +1,24 @@
 import type { APIRoute } from 'astro';
 
+interface NotifyMePayload {
+  email: string;
+  productSlug?: string;
+  variantSku?: string;
+}
+
 export const POST: APIRoute = async ({ request }) => {
   try {
-    const data = await request.json();
+    const data = (await request.json()) as NotifyMePayload;
     const { email, productSlug, variantSku } = data;
 
     if (!email || (!productSlug && !variantSku)) {
-      return new Response(JSON.stringify({ message: 'Email and product identifier (slug or SKU) are required.' }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' },
-      });
+      return new Response(
+        JSON.stringify({ message: 'Email and product identifier (slug or SKU) are required.' }),
+        {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
     }
 
     // Basic email validation
@@ -29,16 +38,24 @@ export const POST: APIRoute = async ({ request }) => {
       Variant SKU: ${variantSku || 'N/A'}
     `);
 
-    return new Response(JSON.stringify({ success: true, message: 'You will be notified when the product is back in stock.' }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
-    });
-
+    return new Response(
+      JSON.stringify({
+        success: true,
+        message: 'You will be notified when the product is back in stock.',
+      }),
+      {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      }
+    );
   } catch (error) {
     console.error('Error processing notify-me request:', error);
-    return new Response(JSON.stringify({ success: false, message: 'An error occurred. Please try again.' }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return new Response(
+      JSON.stringify({ success: false, message: 'An error occurred. Please try again.' }),
+      {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' },
+      }
+    );
   }
 };

@@ -83,7 +83,8 @@
 }
 
 @keyframes price-pulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
   }
   50% {
@@ -93,11 +94,13 @@
 }
 
 /* Ensure text contrast - never black text on navy */
-.bg-primary, .bg-[#002855] {
+.bg-primary,
+.bg-[#002855] {
   color: white;
 }
 
-.bg-secondary, .bg-[#364F6B] {
+.bg-secondary,
+.bg-[#364F6B] {
   color: white;
 }
 

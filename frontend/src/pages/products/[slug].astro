@@ -1,12 +1,19 @@
 ---
 import Layout from '@/layouts/Layout.astro';
 import ProductDetailClient from '@/components/ProductDetailClient.tsx';
-import type { ProductDetail, ProductVariantDetail, BatchInfo, CategoryInfo, MolecularSpecs, StorageHandlingInfo } from '@/types/product';
+import type {
+  ProductDetail,
+  ProductVariantDetail,
+  BatchInfo,
+  CategoryInfo,
+  MolecularSpecs,
+  StorageHandlingInfo,
+} from '@/types/product';
 import Database from 'better-sqlite3';
 import path from 'path';
 
-export async function getStaticPaths() {
-  const dbPath = path.resolve(process.cwd(), '../data/database/catalog.db');  // Corrected to parent directory
+export function getStaticPaths() { // Removed async
+  const dbPath = path.resolve(process.cwd(), '../data/database/catalog.db'); // Corrected to parent directory
   let db: Database.Database | null = null;
   const paths: { params: { slug: string }; props: { product: ProductDetail } }[] = [];
 
@@ -26,20 +33,41 @@ export async function getStaticPaths() {
         s.sequence,
         s.sequence_length,
         s.salt_form,
+        s.formula AS molecular_formula,
+        s.physical_form AS storage_form,
         s.storage_temp_c AS storage_temperature,
         s.recommended_solvent AS storage_solvent
       FROM substances s;
     `;
-    const substances = db.prepare(substancesQuery).all() as any[];
+    const substances = db.prepare(substancesQuery).all() as {
+      substance_id: number;
+      slug: string | null; // Slug can be null from DB schema perspective if not UNIQUE NOT NULL
+      name: string;
+      description: string;
+      purity_percent: number | null;
+      molecular_weight: string | null;
+      cas_number: string | null;
+      sequence: string | null;
+      sequence_length: number | null;
+      salt_form: string | null;
+      molecular_formula: string | null;
+      storage_form: string | null;
+      storage_temperature: string | null;
+      storage_solvent: string | null;
+    }[];
 
     if (!substances || substances.length === 0) {
-      console.warn('[getStaticPaths] No substances found in the database. No product detail pages will be generated.');
+      console.warn(
+        '[getStaticPaths] No substances found in the database. No product detail pages will be generated.'
+      );
     }
 
     for (const substance of substances) {
       // Add a check for valid slug
       if (!substance.slug || typeof substance.slug !== 'string' || substance.slug.trim() === '') {
-        console.warn(`[getStaticPaths] Substance with ID ${substance.substance_id} (name: "${substance.name}") has an invalid or empty slug ("${substance.slug}"). Skipping path generation for this item.`);
+        console.warn(
+          `[getStaticPaths] Substance with ID ${substance.substance_id} (name: "${substance.name}") has an invalid or empty slug ("${substance.slug}"). Skipping path generation for this item.`
+        );
         continue; // Skip this substance if its slug is invalid
       }
 
@@ -49,7 +77,12 @@ export async function getStaticPaths() {
         WHERE v.substance_id = ?
         ORDER BY v.mg ASC;
       `;
-      const variantsData = db.prepare(variantsQuery).all(substance.substance_id) as any[];
+      const variantsData = db.prepare(variantsQuery).all(substance.substance_id) as {
+        variant_id: number;
+        sku: string;
+        mg: number;
+        price_cents: number;
+      }[];
 
       const productVariants: ProductVariantDetail[] = [];
       let overallStockForProduct = 0;
@@ -63,18 +96,26 @@ export async function getStaticPaths() {
           JOIN inventory i ON b.id = i.batch_id
           WHERE b.variant_id = ?;
         `;
-        const batchesData = db.prepare(batchesQuery).all(variant.variant_id) as Partial<BatchInfo>[];
-        
-        const totalStockForVariant = batchesData.reduce((sum, batch) => sum + (batch.stock_quantity || 0), 0);
+        const batchesData = db
+          .prepare(batchesQuery)
+          .all(variant.variant_id) as {
+            batch_identifier: string | null;
+            stock_quantity: number | null;
+          }[];
+
+        const totalStockForVariant = batchesData.reduce(
+          (sum, batch) => sum + (batch.stock_quantity || 0),
+          0
+        );
         overallStockForProduct += totalStockForVariant;
 
         productVariants.push({
           sku: variant.sku,
           mg: variant.mg,
           price_cents: variant.price_cents,
-          batches: batchesData.map(b => ({
+          batches: batchesData.map((b) => ({
             batch_identifier: b.batch_identifier || null,
-            stock_quantity: b.stock_quantity || 0
+            stock_quantity: b.stock_quantity || 0,
           })) as BatchInfo[],
           total_stock: totalStockForVariant,
         });
@@ -86,10 +127,12 @@ export async function getStaticPaths() {
         JOIN substance_categories sc ON c.id = sc.category_id
         WHERE sc.substance_id = ?;
       `;
-      const categoriesData = db.prepare(categoriesQuery).all(substance.substance_id) as CategoryInfo[];
+      const categoriesData = db
+        .prepare(categoriesQuery)
+        .all(substance.substance_id) as CategoryInfo[];
 
       const molecularSpecs: MolecularSpecs = {
-        molecular_formula: substance.molecular_formula || null, // Will be null as it's removed from query
+        molecular_formula: substance.molecular_formula, // Updated to use fetched value
         molecular_weight: substance.molecular_weight,
         cas_number: substance.cas_number,
         sequence: substance.sequence,
@@ -99,15 +142,15 @@ export async function getStaticPaths() {
 
       const storageHandling: StorageHandlingInfo = {
         temperature: substance.storage_temperature,
-        form: substance.storage_form || null, // Ensure it's null if undefined
+        form: substance.storage_form, // Updated to use fetched value
         solvent: substance.storage_solvent,
       };
-      
+
       const product: ProductDetail = {
         slug: substance.slug,
         name: substance.name,
         description: substance.description,
-        short_description: null,  // Set to null since the column doesn't exist
+        short_description: null, // Set to null since the column doesn't exist
         purity_percent: substance.purity_percent,
         molecular_specs: molecularSpecs,
         storage_handling: storageHandling,
@@ -122,7 +165,10 @@ export async function getStaticPaths() {
       });
     }
   } catch (error) {
-    console.error(`[getStaticPaths] Database connection failed: Directory or file does not exist at ${dbPath}. Error details:`, error);
+    console.error(
+      `[getStaticPaths] Database connection failed: Directory or file does not exist at ${dbPath}. Error details:`,
+      error
+    );
   } finally {
     if (db) {
       db.close();
@@ -135,6 +181,9 @@ export async function getStaticPaths() {
 const { product } = Astro.props as { product: ProductDetail };
 ---
 
-<Layout title={product.name} description={product.short_description || product.description.substring(0, 160)}>
+<Layout
+  title={product.name}
+  description={product.short_description || product.description.substring(0, 160)}
+>
   <ProductDetailClient client:load initialProductData={product} />
 </Layout>

@@ -11,7 +11,9 @@ const PersistentSuggestProduct: React.FC = () => {
   const handleCloseSuggestModal = () => setIsSuggestModalOpen(false);
 
   return (
-    <div className="mt-12 mb-8"> {/* Add some margin around the CTA section */}
+    <div className="mb-8 mt-12">
+      {' '}
+      {/* Add some margin around the CTA section */}
       <SuggestProductCTA onOpenModal={handleOpenSuggestModal} />
       <SuggestProductModal isOpen={isSuggestModalOpen} onClose={handleCloseSuggestModal} />
     </div>

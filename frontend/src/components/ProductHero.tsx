@@ -2,9 +2,7 @@
 
 import React from 'react';
 import type { MolecularSpecs } from '@/types/product';
-import { Button } from '@/components/ui/button';
-import { useToast } from "@/components/ui/use-toast"; // Import useToast
-import { Copy } from 'lucide-react';
+// import { useToast } from '@/components/ui/use-toast'; // Import useToast
 
 interface ProductHeroProps {
   productName: string;
@@ -19,47 +17,51 @@ const ProductHero: React.FC<ProductHeroProps> = ({
   molecularSpecs,
   purityPercent,
 }) => {
-  const { toast } = useToast();
-
-  const handleCopySequence = () => {
-    if (molecularSpecs.sequence) {
-      navigator.clipboard.writeText(molecularSpecs.sequence)
-        .then(() => {
-          toast({
-            title: "Copied to Clipboard",
-            description: "Product sequence has been copied.",
-          });
-        })
-        .catch(err => {
-          console.error('Failed to copy sequence: ', err);
-          toast({
-            variant: "destructive",
-            title: "Copy Failed",
-            description: "Could not copy sequence to clipboard.",
-          });
-        });
-    }
-  };
+  // const { toast } = useToast();
 
   return (
-    <section className="pb-6 border-b"> {/* Reduced mb-8 and pb-8 to just pb-6 */}
-      <h1 className="text-3xl md:text-4xl font-bold text-primary mb-4"> {/* Adjusted margin */}
+    <section className="border-b pb-6">
+      {' '}
+      {/* Reduced mb-8 and pb-8 to just pb-6 */}
+      <h1 className="mb-4 text-3xl font-bold text-primary md:text-4xl">
+        {' '}
+        {/* Adjusted margin */}
         {productName}
       </h1>
-
-      {shortBlurb && (
-        <p className="text-lg text-foreground/80 mb-4">{shortBlurb}</p>
-      )}
-
+      {shortBlurb && <p className="mb-4 text-lg text-foreground/80">{shortBlurb}</p>}
       {/* Molecular Info and Copy Button Wrapper */}
-      <div className="md:flex md:justify-between md:items-end mb-4 text-sm leading-tight">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 flex-grow">
-          {molecularSpecs.molecular_weight && <div><strong>Molecular Weight:</strong> {molecularSpecs.molecular_weight}</div>}
-          {molecularSpecs.molecular_formula && <div><strong>Molecular Formula:</strong> {molecularSpecs.molecular_formula}</div>}
-          {molecularSpecs.cas_number && <div><strong>CAS Number:</strong> {molecularSpecs.cas_number}</div>}
-          {molecularSpecs.sequence_length != null && <div><strong>Sequence Length:</strong> {molecularSpecs.sequence_length}</div>}
-          {molecularSpecs.salt_form && <div><strong>Salt Form:</strong> {molecularSpecs.salt_form}</div>}
-          {purityPercent != null && <div><strong>Purity:</strong> {">="} {purityPercent}%</div>}
+      <div className="mb-4 text-sm leading-tight md:flex md:items-end md:justify-between">
+        <div className="grid flex-grow grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-2">
+          {molecularSpecs.molecular_weight && (
+            <div>
+              <strong>Molecular Weight:</strong> {molecularSpecs.molecular_weight}
+            </div>
+          )}
+          {molecularSpecs.molecular_formula && (
+            <div>
+              <strong>Molecular Formula:</strong> {molecularSpecs.molecular_formula}
+            </div>
+          )}
+          {molecularSpecs.cas_number && (
+            <div>
+              <strong>CAS Number:</strong> {molecularSpecs.cas_number}
+            </div>
+          )}
+          {molecularSpecs.sequence_length != null && (
+            <div>
+              <strong>Sequence Length:</strong> {molecularSpecs.sequence_length}
+            </div>
+          )}
+          {molecularSpecs.salt_form && (
+            <div>
+              <strong>Salt Form:</strong> {molecularSpecs.salt_form}
+            </div>
+          )}
+          {purityPercent != null && (
+            <div>
+              <strong>Purity:</strong> {'>='} {purityPercent}%
+            </div>
+          )}
         </div>
       </div>
     </section>

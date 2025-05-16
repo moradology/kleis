@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import type { RelatedProductSummary, CategoryInfo } from '@/types/product';
+import type { RelatedProductSummary } from '@/types/product';
 import RelatedProductCard from './RelatedProductCard';
 import { Skeleton } from '@/components/ui/skeleton'; // Assuming you have a Skeleton component
 
@@ -25,7 +25,7 @@ const RelatedProducts: React.FC<RelatedProductsProps> = ({ currentProductSlug })
         if (!response.ok) {
           throw new Error(`Failed to fetch related products: ${response.statusText}`);
         }
-        const data: RelatedProductSummary[] = await response.json();
+        const data = (await response.json()) as RelatedProductSummary[];
         setRelatedProducts(data);
       } catch (err) {
         console.error(err);
@@ -35,19 +35,19 @@ const RelatedProducts: React.FC<RelatedProductsProps> = ({ currentProductSlug })
       }
     };
 
-    fetchRelatedProducts();
+    void fetchRelatedProducts();
   }, [currentProductSlug]);
 
   if (isLoading) {
     return (
       <div className="my-8">
-        <h2 className="text-2xl font-semibold mb-4 text-primary">Related Compounds</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {[...Array(4)].map((_, index) => (
-            <div key={index} className="border rounded-lg p-4">
-              <Skeleton className="h-6 w-3/4 mb-2" />
-              <Skeleton className="h-4 w-1/2 mb-1" />
-              <Skeleton className="h-4 w-1/4 mb-3" />
+        <h2 className="mb-4 text-2xl font-semibold text-primary">Related Compounds</h2>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          {Array.from({ length: 4 }).map((_, index) => (
+            <div key={index} className="rounded-lg border p-4">
+              <Skeleton className="mb-2 h-6 w-3/4" />
+              <Skeleton className="mb-1 h-4 w-1/2" />
+              <Skeleton className="mb-3 h-4 w-1/4" />
               <Skeleton className="h-8 w-full" />
             </div>
           ))}
@@ -58,8 +58,8 @@ const RelatedProducts: React.FC<RelatedProductsProps> = ({ currentProductSlug })
 
   if (error) {
     return (
-      <div className="my-8 p-4 border border-destructive/50 bg-destructive/10 rounded-md">
-        <h2 className="text-xl font-semibold mb-2 text-destructive">Related Compounds</h2>
+      <div className="my-8 rounded-md border border-destructive/50 bg-destructive/10 p-4">
+        <h2 className="mb-2 text-xl font-semibold text-destructive">Related Compounds</h2>
         <p className="text-destructive-foreground">Could not load related products: {error}</p>
       </div>
     );
@@ -71,9 +71,9 @@ const RelatedProducts: React.FC<RelatedProductsProps> = ({ currentProductSlug })
 
   return (
     <div className="my-8">
-      <h2 className="text-2xl font-semibold mb-6 text-primary">Related Compounds</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {relatedProducts.map((product) => (
+      <h2 className="mb-6 text-2xl font-semibold text-primary">Related Compounds</h2>
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        {relatedProducts.map((product: RelatedProductSummary) => (
           <RelatedProductCard key={product.slug} product={product} />
         ))}
       </div>

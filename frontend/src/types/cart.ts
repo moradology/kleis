@@ -10,13 +10,3 @@ export interface CartItemType {
   href: string; // Link to the product detail page
   stock: number; // Available stock for this variant, for quantity selector limits
 }
-
-export interface RemovedItemPlaceholderType {
-  type: 'removed-placeholder';
-  id: string; // Original item ID
-  name: string;
-  variant: string;
-  href: string;
-}
-
-export type DisplayCartItemType = CartItemType | RemovedItemPlaceholderType;

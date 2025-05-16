@@ -10,8 +10,8 @@ interface ProductVariant {
   variant_id: number;
   sku: string;
   quantity: string; // e.g., "5mg"
-  price: number;    // e.g., 49.99
-  stock: number;    // e.g., 15
+  price: number; // e.g., 49.99
+  stock: number; // e.g., 15
   // If coa_path was added in a previous step, ensure it's here:
   // coa_path?: string | null;
 }
@@ -65,7 +65,17 @@ try {
   `;
 
   const stmt = db.prepare(sqlQuery);
-  const rows = stmt.all() as any[];
+  const rows = stmt.all() as {
+    substance_slug: string;
+    substance_name: string;
+    substance_description: string;
+    purity_percent: number | null;
+    variant_id: number;
+    sku: string;
+    mg: number;
+    price_cents: number;
+    stock: number;
+  }[];
 
   const productsMap = new Map<string, ProductData>();
 
@@ -96,7 +106,6 @@ try {
   products = Array.from(productsMap.values());
   // Update console log message
   console.log(`Fetched and transformed ${products.length} products, sorted by priority.`);
-
 } catch (error) {
   console.error('Failed to connect to the database or query data:', error);
   products = [];
@@ -110,19 +119,27 @@ try {
 
 <Layout title="Products - Kleis Scientific">
   <section class="py-12">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"> {/* Updated max-width and padding */}
-      <h1 class="text-3xl font-bold mb-2 text-center text-navy">Research Compounds</h1> {/* Changed text-[#002855] to text-navy */}
-      <p class="text-center text-muted-foreground mb-8">All products are for research use only. Not for therapeutic use or human consumption.</p>
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      {/* Updated max-width and padding */}
+      <h1 class="mb-2 text-center text-3xl font-bold text-navy">Research Compounds</h1>
+      {/* Changed text-[#002855] to text-navy */}
+      <p class="mb-8 text-center text-muted-foreground">
+        All products are for research use only. Not for therapeutic use or human consumption.
+      </p>
 
-      {products.length > 0 ? (
-        <ProductsDisplay client:load initialProducts={products} />
-      ) : (
-        <p class="text-center text-muted-foreground">
-          No products found or an error occurred while loading products.
-        </p>
-      )}
+      {
+        products.length > 0 ? (
+          <ProductsDisplay client:load initialProducts={products} />
+        ) : (
+          <p class="text-center text-muted-foreground">
+            No products found or an error occurred while loading products.
+          </p>
+        )
+      }
     </div>
-    <PersistentSuggestProduct client:load /> {/* Added component instance */}
+    <PersistentSuggestProduct client:load />
+    {/* Added component instance */}
   </section>
-  {/* <SuggestProductDialog client:load /> */} {/* Ensure this was previously removed */}
+  {/* <SuggestProductDialog client:load /> */}
+  {/* Ensure this was previously removed */}
 </Layout>

@@ -33,7 +33,7 @@ export interface CategoryInfo {
 
 export interface ProductDetail {
   slug: string;
-  name:string;
+  name: string;
   description: string;
   short_description?: string | null;
   purity_percent?: number | null;
