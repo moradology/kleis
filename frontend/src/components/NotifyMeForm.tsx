@@ -75,10 +75,9 @@ const NotifyMeForm: React.FC<NotifyMeFormProps> = ({ productSlug, variantSku }) 
   };
 
   return (
-    // Removed mt-6, max-w-2xl, mx-auto. Changed p-6 to p-4.
     <div className="p-4 border border-dashed border-primary/50 rounded-lg bg-muted/20">
-      <div className="md:flex md:items-center md:gap-6">
-        <div className="md:flex-1 mb-4 md:mb-0">
+      <div className="flex flex-col gap-4">
+        <div className="">
           <h3 className="text-lg font-semibold text-primary mb-1 flex items-center">
             <AlertTriangle size={20} className="mr-2 text-destructive" />
             Sorry, we're out!
@@ -87,7 +86,7 @@ const NotifyMeForm: React.FC<NotifyMeFormProps> = ({ productSlug, variantSku }) 
             Enter your email and we'll let you know when this product is back in stock.
           </p>
         </div>
-        <form onSubmit={handleSubmit} className="flex w-full md:w-auto md:flex-1">
+        <form onSubmit={handleSubmit} className="flex w-full">
           <Input
             type="email"
             placeholder="your.email@example.com"
