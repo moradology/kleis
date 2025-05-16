@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react'; // Added useEffect
 import { Menu, X, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { useCart } from '@/hooks/useCart'; // Import useCart
+import { useCart } from '@/hooks/useCart';
+import CartPreview from './CartPreview'; // Import the new CartPreview component
 
 interface NavItem {
   label: string;
@@ -20,12 +21,56 @@ const MAIN_NAV_ITEMS: NavItem[] = [
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  // const [cartItemCount, setCartItemCount] = useState(0); // Example item count
-  const { itemCount } = useCart(); // Use itemCount from useCart hook
+  const { itemCount } = useCart();
+  const [isCartPreviewVisible, setIsCartPreviewVisible] = useState(false); // State for preview visibility
+  const [isOnCartPage, setIsOnCartPage] = useState(false); // State to check if on cart page
+
+  useEffect(() => {
+    // Check current path only on client-side
+    if (typeof window !== 'undefined') {
+      setIsOnCartPage(window.location.pathname === '/cart');
+    }
+  }, []); // Empty dependency array means this runs once on mount
+
+  // Update isOnCartPage if path changes (e.g., client-side navigation)
+  useEffect(() => {
+    const handleRouteChange = () => {
+      if (typeof window !== 'undefined') {
+        setIsOnCartPage(window.location.pathname === '/cart');
+      }
+    };
+
+    // Listen to popstate for browser back/forward navigation
+    window.addEventListener('popstate', handleRouteChange);
+    // Astro specific event for page load (SPA-like transitions)
+    document.addEventListener('astro:page-load', handleRouteChange);
+
+
+    return () => {
+      window.removeEventListener('popstate', handleRouteChange);
+      document.removeEventListener('astro:page-load', handleRouteChange);
+    };
+  }, []);
+
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
+
+  // Timer to manage closing the preview with a slight delay
+  let leaveTimer: NodeJS.Timeout | null = null;
+
+  const handleCartIconMouseEnter = () => {
+    if (leaveTimer) clearTimeout(leaveTimer);
+    setIsCartPreviewVisible(true);
+  };
+
+  const handleCartIconMouseLeave = () => {
+    leaveTimer = setTimeout(() => {
+      setIsCartPreviewVisible(false);
+    }, 200); // 200ms delay
+  };
+
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background">
@@ -60,39 +105,50 @@ export default function Header() {
           >
             Contact&nbsp;Us
           </a>
-          {/* Desktop Cart Button */}
-          <a
-            href="/cart"
-            className="relative flex items-center justify-center rounded-md p-2 text-primary transition-colors hover:bg-border/20 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-            aria-label="View shopping cart"
+          {/* Desktop Cart Button and Preview Wrapper */}
+          <div
+            className="relative"
+            onMouseEnter={handleCartIconMouseEnter}
+            onMouseLeave={handleCartIconMouseLeave}
           >
-            {/* Inlined SVG for cart icon */}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="h-5 w-5"
-              aria-hidden="true"
+            <a
+              href="/cart"
+              className="relative flex items-center justify-center rounded-md p-2 text-primary transition-colors hover:bg-border/20 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              aria-label="View shopping cart"
             >
-              <circle cx="9" cy="21" r="1" />
-              <circle cx="20" cy="21" r="1" />
-              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-            </svg>
-            {itemCount > 0 && (
-              <span className="absolute -right-1 -top-1 flex h-[1.1rem] min-w-[1.1rem] items-center justify-center rounded-full bg-lime text-[10px] font-semibold text-navy">
-                {itemCount}
-              </span>
-            )}
-          </a>
+              {/* Inlined SVG for cart icon */}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="h-5 w-5"
+                aria-hidden="true"
+              >
+                <circle cx="9" cy="21" r="1" />
+                <circle cx="20" cy="21" r="1" />
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+              </svg>
+              {itemCount > 0 && (
+                <span className="absolute -right-1 -top-1 flex h-[1.1rem] min-w-[1.1rem] items-center justify-center rounded-full bg-lime text-[10px] font-semibold text-navy">
+                  {itemCount}
+                </span>
+              )}
+            </a>
+            {isCartPreviewVisible && !isOnCartPage && <CartPreview />}
+          </div>
         </nav>
 
         {/* Mobile Controls: Cart Icon + Menu Button */}
+        {/* Mobile cart preview is generally not a good UX, so not adding it here.
+            Users can click to go to the cart page.
+            If needed, a similar relative div and state management could be added for mobile.
+        */}
         <div className="flex items-center gap-2 sm:gap-4 md:hidden">
           {/* Mobile Cart Button */}
           <a

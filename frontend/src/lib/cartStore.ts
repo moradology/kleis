@@ -2,6 +2,8 @@ import type { CartItemType } from '../types/cart';
 
 const CART_STORAGE_KEY = 'kleisCart';
 const MAX_CART_ITEMS = 50; // Maximum number of distinct items in the cart
+const DEBUG_CART_STORE = process.env.NODE_ENV === 'development'; // Add debug flag
+const DEBUG_ANALYTICS = process.env.NODE_ENV === 'development'; // Add analytics debug flag
 
 // Ensure cart is loaded from localStorage at module initialization on the client-side
 let cart: CartItemType[] = typeof window !== 'undefined' ? loadCart() : [];
@@ -34,6 +36,7 @@ function loadCart(): CartItemType[] {
   if (typeof window === 'undefined' || !window.localStorage) {
     return [];
   }
+  if (DEBUG_CART_STORE) console.time('cartStore:loadCart');
   const storedCart = localStorage.getItem(CART_STORAGE_KEY);
   try {
     const parsed = storedCart ? (JSON.parse(storedCart) as unknown) : []; // Parse as unknown first
@@ -63,12 +66,15 @@ function loadCart(): CartItemType[] {
             stock: Number(item.stock) || 0,
           })
         );
+      if (DEBUG_CART_STORE) console.timeEnd('cartStore:loadCart');
       return validatedCart; // Explicitly return the processed cart
     }
     localStorage.removeItem(CART_STORAGE_KEY); // Clear corrupted non-array data
+    if (DEBUG_CART_STORE) console.timeEnd('cartStore:loadCart');
     return [];
   } catch {
     localStorage.removeItem(CART_STORAGE_KEY); // Clear corrupted JSON
+    if (DEBUG_CART_STORE) console.timeEnd('cartStore:loadCart');
     return [];
   }
 }
@@ -81,6 +87,7 @@ function saveCart(newCart: CartItemType[]): void {
   if (typeof window === 'undefined' || !window.localStorage) {
     return;
   }
+  if (DEBUG_CART_STORE) console.time('cartStore:saveCart');
   try {
     localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(newCart));
   } catch (error) {
@@ -95,6 +102,8 @@ function saveCart(newCart: CartItemType[]): void {
       // In a real app, you might dispatch a global event here for the UI to pick up, e.g.,
       // window.dispatchEvent(new CustomEvent('cartError', { detail: { type: 'QuotaExceededError', message: 'Storage full' } }));
     }
+  } finally {
+    if (DEBUG_CART_STORE) console.timeEnd('cartStore:saveCart');
   }
 }
 
@@ -160,6 +169,16 @@ export const cartStore = {
     cart = newCart;
     saveCart(cart);
     emitChange();
+    if (DEBUG_ANALYTICS) {
+      const eventData = {
+        item_id: newItemData.sku,
+        item_name: newItemData.name,
+        item_variant: newItemData.variant,
+        quantity: existingItemIndex > -1 ? newCart[existingItemIndex].quantity : quantityToAdd, // Log the actual quantity set or added
+        price: newItemData.unitPrice / 100, // Example: log price in dollars
+      };
+      console.log('[Analytics] Event: addToCart, Data:', eventData);
+    }
   },
 
   /**
@@ -173,6 +192,9 @@ export const cartStore = {
       cart = newCart;
       saveCart(cart);
       emitChange();
+      if (DEBUG_ANALYTICS) {
+        console.log(`[Analytics] Event: removeFromCart, Item ID: ${itemId}`);
+      }
     }
   },
 
@@ -207,6 +229,15 @@ export const cartStore = {
       cart = newCart;
       saveCart(cart);
       emitChange();
+      if (DEBUG_ANALYTICS) {
+        const updatedItem = newCart.find(item => item.id === itemId);
+        const eventData = {
+          item_id: itemId,
+          new_quantity: updatedItem ? updatedItem.quantity : 0, // 0 if removed
+          action: newQuantity <= 0 ? 'removed_by_quantity_update' : 'quantity_updated',
+        };
+        console.log('[Analytics] Event: updateCartQuantity, Data:', eventData);
+      }
     }
   },
 
@@ -218,6 +249,9 @@ export const cartStore = {
       cart = [];
       saveCart(cart);
       emitChange();
+      if (DEBUG_ANALYTICS) {
+        console.log('[Analytics] Event: clearCart');
+      }
     }
   },
 
