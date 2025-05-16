@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import ProductCard from '../components/ProductCard.tsx';
+import ProductsDisplay from '../components/ProductsDisplay.tsx';
+import PersistentSuggestProduct from '../components/PersistentSuggestProduct.tsx'; // Added import
 import Database from 'better-sqlite3';
 import path from 'path';
 
@@ -109,27 +110,19 @@ try {
 
 <Layout title="Products - Kleis Scientific">
   <section class="py-12">
-    <div class="max-w-4xl mx-auto">
-      <h1 class="text-3xl font-bold mb-2 text-center text-[#002855]">Research Compounds</h1>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"> {/* Updated max-width and padding */}
+      <h1 class="text-3xl font-bold mb-2 text-center text-navy">Research Compounds</h1> {/* Changed text-[#002855] to text-navy */}
       <p class="text-center text-muted-foreground mb-8">All products are for research use only. Not for therapeutic use or human consumption.</p>
 
       {products.length > 0 ? (
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-1">
-          {products.map(product => (
-            <ProductCard
-              client:visible
-              id={product.id}
-              name={product.name}
-              purity={product.purity}
-              variants={product.variants}
-            />
-          ))}
-        </div>
+        <ProductsDisplay client:load initialProducts={products} />
       ) : (
         <p class="text-center text-muted-foreground">
           No products found or an error occurred while loading products.
         </p>
       )}
     </div>
+    <PersistentSuggestProduct client:load /> {/* Added component instance */}
   </section>
+  {/* <SuggestProductDialog client:load /> */} {/* Ensure this was previously removed */}
 </Layout>

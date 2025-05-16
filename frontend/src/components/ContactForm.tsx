@@ -128,7 +128,7 @@ const ContactForm: React.FC = () => {
           id="name"
           value={formData.name}
           onChange={handleChange}
-          placeholder="e.g., Dr. Jane Doe"
+          placeholder="e.g., Rosalind Franklin"
           className={errors.name ? 'border-destructive' : ''}
           aria-invalid={!!errors.name}
           aria-describedby={errors.name ? 'name-error' : undefined}
@@ -146,7 +146,7 @@ const ContactForm: React.FC = () => {
           id="email"
           value={formData.email}
           onChange={handleChange}
-          placeholder="you@example.com"
+          placeholder="rosalind.franklin@example.com"
           className={errors.email ? 'border-destructive' : ''}
           aria-invalid={!!errors.email}
           aria-describedby={errors.email ? 'email-error' : undefined}
