@@ -24,7 +24,7 @@ const CartPreview: React.FC = () => {
             <h3 className="mb-2 text-sm font-medium text-muted-foreground">
               Cart ({itemCount} {itemCount === 1 ? 'item' : 'items'})
             </h3>
-            <ul role="list" className="-my-3 divide-y divide-border">
+            <ul className="-my-3 divide-y divide-border">
               {items.map((item) => (
                 <CartPreviewItem key={item.id} item={item} />
               ))}

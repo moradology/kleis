@@ -50,6 +50,8 @@ describe('useCart hook', () => {
   let mockSubscribeCallback: (() => void) | null = null;
 
   beforeEach(() => {
+    // Reset mockSnapshot to an empty array before each test
+    mockSnapshot = [];
     (cartStore.getSnapshot as ReturnType<typeof vi.fn>).mockImplementation(() => mockSnapshot);
     (cartStore.subscribe as ReturnType<typeof vi.fn>).mockImplementation((listener) => {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
